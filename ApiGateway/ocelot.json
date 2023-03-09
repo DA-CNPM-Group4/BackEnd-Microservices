@@ -1,0 +1,21 @@
+{
+  "Routes": [
+    //Info service
+    {
+      "UpstreamPathTemplate": "/api/Driver",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "infoservice",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Driver"
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:800"
+  }
+}

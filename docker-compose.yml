@@ -29,3 +29,15 @@ services:
         - DB_HOST=infodb
         - DB_NAME=dms_info
         - DB_SA_PASSWORD=vuhiep2k1072001
+
+  apigateway:
+    container_name: api-gateway
+    image: ${DOCKER_REGISTRY-}apigateway
+    build:
+      context: .
+      dockerfile: ApiGateway/Dockerfile
+    ports:
+        - 8001:80
+    networks:
+        - backend
+
