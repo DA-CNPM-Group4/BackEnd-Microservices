@@ -1,9 +1,14 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace InfoService.Models
 {
+    [Table("Driver", Schema = "dbo")]
     public class Driver
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
         public Guid AccountId { get; set; }
         public string IdentityNumber { get; set; }
         public string Phone { get; set; }

@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TripService", "TripService\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfoService", "InfoService\InfoService.csproj", "{E8BFB372-1696-4C4D-9C84-EAAF3E16A803}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{4069781C-01E9-4AC5-AD06-D29CBBA35DB5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{E8BFB372-1696-4C4D-9C84-EAAF3E16A803}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E8BFB372-1696-4C4D-9C84-EAAF3E16A803}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E8BFB372-1696-4C4D-9C84-EAAF3E16A803}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4069781C-01E9-4AC5-AD06-D29CBBA35DB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4069781C-01E9-4AC5-AD06-D29CBBA35DB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4069781C-01E9-4AC5-AD06-D29CBBA35DB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4069781C-01E9-4AC5-AD06-D29CBBA35DB5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

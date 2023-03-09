@@ -1,0 +1,31 @@
+version: '3.4'
+
+networks:
+    backend:
+
+services:
+  infodb:
+    container_name: info-db
+    image: mcr.microsoft.com/mssql/server
+    environment:
+        - ACCEPT_EULA=Y
+        - SA_PASSWORD=vuhiep2k1072001
+    networks:
+        - backend
+    ports:
+        - 8005:1433
+
+  infoservice:
+    container_name: info-service
+    image: ${DOCKER_REGISTRY-}infoservice
+    build:
+      context: .
+      dockerfile: InfoService/Dockerfile
+    networks:
+        - backend
+    ports:
+        - 8002:80
+    environment:
+        - DB_HOST=infodb
+        - DB_NAME=dms_info
+        - DB_SA_PASSWORD=vuhiep2k1072001
