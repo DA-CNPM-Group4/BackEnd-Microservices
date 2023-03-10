@@ -13,6 +13,51 @@
         }
       ],
       "DownstreamPathTemplate": "/api/Driver"
+    },
+
+    //Authentication service
+    {
+      "UpstreamPathTemplate": "/api/Driver",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "authenticationservice",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Driver"
+    },
+
+    //Trip service
+    {
+      "UpstreamPathTemplate": "/api/Driver",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tripservice",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Driver"
+    },
+
+    //Chat service
+    {
+      "UpstreamPathTemplate": "/api/Driver",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "chatservice",
+          "Port": 80
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Driver"
     }
   ],
   "GlobalConfiguration": {

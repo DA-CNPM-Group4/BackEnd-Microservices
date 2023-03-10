@@ -15,6 +15,28 @@ services:
     ports:
         - 8005:1433
 
+  tripdb:
+    container_name: trip-db
+    image: mcr.microsoft.com/mssql/server
+    environment:
+        - ACCEPT_EULA=Y
+        - SA_PASSWORD=vuhiep2k1072001
+    networks:
+        - backend
+    ports:
+        - 8006:1433
+
+  chatdb:
+    container_name: chat-db
+    image: mcr.microsoft.com/mssql/server
+    environment:
+        - ACCEPT_EULA=Y
+        - SA_PASSWORD=vuhiep2k1072001
+    networks:
+        - backend
+    ports:
+        - 8007:1433
+
   infoservice:
     container_name: info-service
     image: ${DOCKER_REGISTRY-}infoservice
@@ -23,8 +45,6 @@ services:
       dockerfile: InfoService/Dockerfile
     networks:
         - backend
-    ports:
-        - 8002:80
     environment:
         - DB_HOST=infodb
         - DB_NAME=dms_info
@@ -40,4 +60,39 @@ services:
         - 8001:80
     networks:
         - backend
+
+  authenticationservice:
+    container_name: authentication-service
+    image: ${DOCKER_REGISTRY-}authenticationservice
+    build:
+      context: .
+      dockerfile: AuthenticationService/Dockerfile
+    networks:
+        - backend
+
+  tripservice:
+    container_name: trip-service
+    image: ${DOCKER_REGISTRY-}tripservice
+    build:
+      context: .
+      dockerfile: TripService/Dockerfile
+    networks:
+        - backend
+    environment:
+        - DB_HOST=tripdb
+        - DB_NAME=dms_trip
+        - DB_SA_PASSWORD=vuhiep2k1072001
+
+  chatservice:
+    container_name: chat-service
+    image: ${DOCKER_REGISTRY-}chatservice
+    build:
+      context: .
+      dockerfile: ChatService/Dockerfile
+    networks:
+        - backend
+    environment:
+        - DB_HOST=chatdb
+        - DB_NAME=dms_chat
+        - DB_SA_PASSWORD=vuhiep2k1072001
 
