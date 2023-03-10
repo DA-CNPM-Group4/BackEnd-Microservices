@@ -1,8 +1,7 @@
-﻿using InfoService.Repositories;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using TripService.Repositories;
 
-namespace InfoService.Controllers
+namespace TripService.Controllers
 {
     public class BaseController : ControllerBase, IDisposable
     {

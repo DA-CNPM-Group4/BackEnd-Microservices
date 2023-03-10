@@ -2,8 +2,8 @@
   "Routes": [
     //Info service
     {
-      "UpstreamPathTemplate": "/api/Driver",
-      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+      "UpstreamPathTemplate": "/api/{controller}/{action}",
+      "UpstreamHttpMethod": [ "Get", "Post" ],
 
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -12,53 +12,53 @@
           "Port": 80
         }
       ],
-      "DownstreamPathTemplate": "/api/Driver"
+      "DownstreamPathTemplate": "/api/{controller}/{action}"
     },
 
-    //Authentication service
-    {
-      "UpstreamPathTemplate": "/api/Driver",
-      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+    ////Authentication service
+    //{
+    //  "UpstreamPathTemplate": "/api/Driver",
+    //  "UpstreamHttpMethod": [ "Get", "Post" ],
 
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "authenticationservice",
-          "Port": 80
-        }
-      ],
-      "DownstreamPathTemplate": "/api/Driver"
-    },
+    //  "DownstreamScheme": "http",
+    //  "DownstreamHostAndPorts": [
+    //    {
+    //      "Host": "authenticationservice",
+    //      "Port": 80
+    //    }
+    //  ],
+    //  "DownstreamPathTemplate": "/api/Driver"
+    //},
 
-    //Trip service
-    {
-      "UpstreamPathTemplate": "/api/Driver",
-      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+    ////Trip service
+    //{
+    //  "UpstreamPathTemplate": "/api/Driver",
+    //  "UpstreamHttpMethod": [ "Get", "Post" ],
 
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "tripservice",
-          "Port": 80
-        }
-      ],
-      "DownstreamPathTemplate": "/api/Driver"
-    },
+    //  "DownstreamScheme": "http",
+    //  "DownstreamHostAndPorts": [
+    //    {
+    //      "Host": "tripservice",
+    //      "Port": 80
+    //    }
+    //  ],
+    //  "DownstreamPathTemplate": "/api/Driver"
+    //},
 
-    //Chat service
-    {
-      "UpstreamPathTemplate": "/api/Driver",
-      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+    ////Chat service
+    //{
+    //  "UpstreamPathTemplate": "/api/Driver",
+    //  "UpstreamHttpMethod": [ "Get", "Post" ],
 
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "chatservice",
-          "Port": 80
-        }
-      ],
-      "DownstreamPathTemplate": "/api/Driver"
-    }
+    //  "DownstreamScheme": "http",
+    //  "DownstreamHostAndPorts": [
+    //    {
+    //      "Host": "chatservice",
+    //      "Port": 80
+    //    }
+    //  ],
+    //  "DownstreamPathTemplate": "/api/Driver"
+    //}
   ],
   "GlobalConfiguration": {
     "BaseUrl": "http://localhost:800"

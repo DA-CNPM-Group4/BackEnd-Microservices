@@ -5,20 +5,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InfoService.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class DriverController : BaseController
     {
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Driver>>> GetDrivers()
         {
-            return await provider.Driver.GetDrivers();
+            return await Repository.Driver.GetDrivers();
         }
 
         [HttpPost]
         public async Task<ActionResult<int>> Create(Driver driver)
         {
-            return await provider.Driver.CreateDriver(driver);
+            return await Repository.Driver.CreateDriver(driver);
         }
     }
 }

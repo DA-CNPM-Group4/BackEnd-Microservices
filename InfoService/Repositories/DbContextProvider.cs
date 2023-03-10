@@ -2,7 +2,7 @@
 
 namespace InfoService.Repositories
 {
-    public class BaseProvider : IDisposable
+    public class DbContextProvider : IDisposable
     {
         InfoDbContext context;
         protected InfoDbContext Context
