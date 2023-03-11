@@ -1,4 +1,5 @@
-﻿using InfoService.Models;
+﻿using Helper.Models;
+using InfoService.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,15 +11,24 @@ namespace InfoService.Controllers
     public class DriverController : BaseController
     {
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Driver>>> GetDrivers()
+        public async Task<ResponseMsg> GetDrivers()
         {
-            return await Repository.Driver.GetDrivers();
+            return new ResponseMsg {
+                status = true,
+                data = await Repository.Driver.GetDrivers(),
+                message = "Get all driver info success"
+            };
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> Create(Driver driver)
+        public async Task<ResponseMsg> Create(Driver driver)
         {
-            return await Repository.Driver.CreateDriver(driver);
+            return new ResponseMsg
+            {
+                status = true,
+                data = await Repository.Driver.CreateDriver(driver),
+                message = "Create driver info success"
+            };
         }
     }
 }

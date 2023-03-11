@@ -37,6 +37,17 @@ services:
     ports:
         - 8007:1433
 
+  authenticationdb:
+    container_name: authentication-db
+    image: mcr.microsoft.com/mssql/server
+    environment:
+        - ACCEPT_EULA=Y
+        - SA_PASSWORD=vuhiep2k1072001
+    networks:
+        - backend
+    ports:
+        - 8008:1433
+
   infoservice:
     container_name: info-service
     image: ${DOCKER_REGISTRY-}infoservice
@@ -69,6 +80,10 @@ services:
       dockerfile: AuthenticationService/Dockerfile
     networks:
         - backend
+    environment:
+        - DB_HOST=authenticationdb
+        - DB_NAME=dms_authentication
+        - DB_SA_PASSWORD=vuhiep2k1072001
 
   tripservice:
     container_name: trip-service
