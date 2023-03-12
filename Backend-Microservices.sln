@@ -6,6 +6,12 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Microservices", "Microservices", "{ED562106-81D5-4AB3-8377-AA611CE61E21}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatService", "ChatService\ChatService.csproj", "{BA4DC0E1-5CA4-400D-BF75-F7385E40C58E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{058E7870-AA3C-4F8D-B9A3-F3963F3B9B74} = {058E7870-AA3C-4F8D-B9A3-F3963F3B9B74}
+		{0F6FC242-72D2-474F-ABD7-4AD1A08AE344} = {0F6FC242-72D2-474F-ABD7-4AD1A08AE344}
+		{90F53D83-0BAE-49E1-A991-09E961558E6A} = {90F53D83-0BAE-49E1-A991-09E961558E6A}
+		{E8BFB372-1696-4C4D-9C84-EAAF3E16A803} = {E8BFB372-1696-4C4D-9C84-EAAF3E16A803}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TripService", "TripService\TripService.csproj", "{058E7870-AA3C-4F8D-B9A3-F3963F3B9B74}"
 EndProject
@@ -19,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateway", "ApiGateway\Ap
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthenticationService", "AuthenticationService\AuthenticationService.csproj", "{0F6FC242-72D2-474F-ABD7-4AD1A08AE344}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helper", "Helper\Helper.csproj", "{4545E3F8-7C2C-460C-83B3-35D4028F5461}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helper", "Helper\Helper.csproj", "{4545E3F8-7C2C-460C-83B3-35D4028F5461}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

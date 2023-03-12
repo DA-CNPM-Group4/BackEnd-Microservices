@@ -1,4 +1,5 @@
 ﻿using AuthenticationService.Models;
+using AuthenticationService.RabbitMQServices;
 using Helper.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,9 +13,11 @@ namespace AuthenticationService.Controllers
     public class AuthenticationController : ControllerBase
     {
         private readonly AuthDbContext _context;
-        public AuthenticationController(AuthDbContext context)
+        private readonly IMessageProducer _producer;
+        public AuthenticationController(AuthDbContext context, IMessageProducer messageProducer)
         {
             _context = context;
+            _producer = messageProducer;
         }
 
         [HttpPost]
@@ -50,6 +53,7 @@ namespace AuthenticationService.Controllers
         public async Task<ResponseMsg> Register(object registerInfo)
         {
             JObject objTemp = JObject.Parse(registerInfo.ToString());
+            string name = (string)objTemp["name"];
             string email = (string)objTemp["email"];
             string phone = (string)objTemp["phone"];
             string password = (string)objTemp["password"];
@@ -68,7 +72,7 @@ namespace AuthenticationService.Controllers
             {
                 await _context.AddAsync(new AuthenticationInfo
                 {
-                    Name = "",
+                    Name = name,
                     Password = password,
                     Email = email,
                     Phone = phone,
@@ -82,6 +86,19 @@ namespace AuthenticationService.Controllers
                 int registerResult = await _context.SaveChangesAsync();
                 if(registerResult > 0)
                 {
+                    _producer.SendMessage("authenInfo", new
+                    {
+                        Status = true,
+                        Message = "AddInfo",
+                        Data = new {
+                            Name = name,
+                            Password = password,
+                            Email = email,
+                            Phone = phone,
+                            Role = role,
+                        },
+                        
+                    });
                     return new ResponseMsg
                     {
                         status = true,

@@ -1,10 +1,11 @@
 using AuthenticationService;
+using AuthenticationService.RabbitMQServices;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Services.AddTransient<IMessageProducer, RabbitmqProducer>();
 builder.Services.AddControllers();
 
 //var dbHost = ".\\SQLEXPRESS";
