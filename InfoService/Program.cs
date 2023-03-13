@@ -37,7 +37,7 @@ consumer.Received += async (model, eventArgs) =>
     string status = (string)jsonMessage["Status"];
     string messageReceveid = (string)jsonMessage["Message"];
     JObject data = (JObject)jsonMessage["Data"];
-    if(messageReceveid == $"AddDataInfo")
+    if(messageReceveid == "AddDataInfo")
     {
         string Role = (string)data["Role"];
         if(Role == Catalouge.Role.Staff)

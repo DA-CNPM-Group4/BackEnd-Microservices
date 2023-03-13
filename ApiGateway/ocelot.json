@@ -2,7 +2,7 @@
   "Routes": [
     //Info service
     {
-      "UpstreamPathTemplate": "/api/Driver/{action}",
+      "UpstreamPathTemplate": "/api/Info/{controller}/{action}",
       "UpstreamHttpMethod": [ "Get", "Post" ],
 
       "DownstreamScheme": "http",
@@ -12,7 +12,7 @@
           "Port": 80
         }
       ],
-      "DownstreamPathTemplate": "/api/Driver/{action}"
+      "DownstreamPathTemplate": "/api/Info/{controller}/{action}"
     },
 
     //Authentication service
@@ -32,7 +32,7 @@
 
     //Trip service
     {
-      "UpstreamPathTemplate": "/api/Trip/{action}",
+      "UpstreamPathTemplate": "/api/Trip/{controller}/{action}",
       "UpstreamHttpMethod": [ "Get", "Post" ],
 
       "DownstreamScheme": "http",
@@ -42,7 +42,7 @@
           "Port": 80
         }
       ],
-      "DownstreamPathTemplate": "/api/Trip/{action}"
+      "DownstreamPathTemplate": "/api/Trip/{controller}/{action}"
     },
 
     //Chat service

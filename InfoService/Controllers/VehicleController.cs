@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InfoService.Controllers
 {
-    [Route("api/[controller]/[action]")]
+    [Route("api/Info/[controller]/[action]")]
     [ApiController]
     public class VehicleController : BaseController
     {

@@ -29,14 +29,14 @@ namespace Helper
         {
             public static string Driver = "Driver";
             public static string Staff = "Staff";
-            public static string Passenger = "Passenger ";
+            public static string Passenger = "Passenger";
         }
 
         public static class VehicleType
         {
             public static string Motobike = "Motobike";
             public static string Car4S = "Car4S";
-            public static string Car7S = "Car7S ";
+            public static string Car7S = "Car7S";
         }
 
         public static class Gender

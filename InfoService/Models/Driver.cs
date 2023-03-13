@@ -14,6 +14,7 @@ namespace InfoService.Models
         public string Email { get; set; }
         public string Name { get; set; }
         public bool? Gender { get; set; }
+        public bool? HaveVehicleRegistered { get; set; }
         public string? Address { get; set; }
         public double? AverageRate { get; set; }
         public int? NumberOfRate { get; set; }

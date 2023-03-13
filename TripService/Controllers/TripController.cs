@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace TripService.Controllers
 {
-    [Route("api/[controller]/[action]")]
+    [Route("api/Trip/[controller]/[action]")]
     [ApiController]
     public class TripController : BaseController
     {
