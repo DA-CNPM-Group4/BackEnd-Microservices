@@ -21,7 +21,7 @@ namespace InfoService.Repositories
 
             //destination.Phone = source.Phone;
             //destination.Email = source.Email;
-
+            destination.IdentityNumber = driver.IdentityNumber;
             destination.Name = driver.Name;
             destination.Gender = driver.Gender;
             destination.Address = driver.Address;
@@ -40,6 +40,17 @@ namespace InfoService.Repositories
         public async Task<Driver> GetDriverById(Guid AccountId)
         {
             return await context.Driver.FindAsync(AccountId);
+        }
+
+        public async Task<int> MarkAlreadyRegisVehicle(Guid driverId)
+        {
+            Driver driver = await context.Driver.FindAsync(driverId);
+            if(driver != null)
+            {
+                driver.HaveVehicleRegistered = true;
+                return await context.SaveChangesAsync();
+            }
+            return -1;
         }
 
     }
