@@ -9,13 +9,13 @@ namespace InfoService.Repositories
         {
         }
 
-        public async Task<int> CreateDriver(Driver driver)
+        public async Task<int> AddDriverInfo(Driver driver)
         {
-            context.Driver.AddAsync(driver);
+            await context.Driver.AddAsync(driver);
             return await context.SaveChangesAsync();
         }
 
-        public async Task<List<Driver>> GetDrivers()
+        public async Task<List<Driver>> GetAllDrivers()
         {
             return await context.Driver.ToListAsync();
         }

@@ -1,8 +1,10 @@
 using AuthenticationService.RabbitMQServices;
+using Helper;
 using InfoService.Models;
 using InfoService.RabbitMQServices;
 using InfoService.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -27,25 +29,51 @@ channel.QueueDeclare(queue: "authenInfo", exclusive: false);
 channel.QueueBind(queue: "authenInfo", exchange: "info", routingKey: "authenInfo");
 
 var consumer = new EventingBasicConsumer(channel);
-consumer.Received += (model, eventArgs) =>
+consumer.Received += async (model, eventArgs) =>
 {
     var body = eventArgs.Body.ToArray();
     var message = Encoding.UTF8.GetString(body);
     JObject jsonMessage = JObject.Parse(message.ToString());
-    Console.WriteLine(jsonMessage);
     string status = (string)jsonMessage["Status"];
-    string message1 = (string)jsonMessage["Message"];
+    string messageReceveid = (string)jsonMessage["Message"];
     JObject data = (JObject)jsonMessage["Data"];
-    Driver newDriver = new Driver
+    if(messageReceveid == $"AddDataInfo")
     {
-        AccountId = new Guid(),
-        Email = (string)data["Email"],
-        Phone = (string)data["Phone"],
-        Name = (string)data["Name"],
-    };
-    serviceRepository.Driver.CreateDriver(newDriver);
-    //serviceRepository.Driver.CreateDriver();
-    //result = message;
+        string Role = (string)data["Role"];
+        if(Role == Catalouge.Role.Staff)
+        {
+            Staff newUser = new Staff
+            {
+                AccountId = (Guid)data["AccountId"],
+                Email = (string)data["Email"],
+                Phone = (string)data["Phone"],
+                Name = (string)data["Name"],
+            };
+            await serviceRepository.Staff.AddStaffInfo(newUser);
+        }
+        else if(Role == Catalouge.Role.Passenger)
+        {
+            Passenger newUser = new Passenger
+            {
+                AccountId = (Guid)data["AccountId"],
+                Email = (string)data["Email"],
+                Phone = (string)data["Phone"],
+                Name = (string)data["Name"],
+            };
+            await serviceRepository.Passenger.AddPassengerInfo(newUser);
+        }
+        else if(Role == Catalouge.Role.Driver)
+        {
+            Driver newUser = new Driver
+            {
+                AccountId = (Guid)data["AccountId"],
+                Email = (string)data["Email"],
+                Phone = (string)data["Phone"],
+                Name = (string)data["Name"],
+            };
+            await serviceRepository.Driver.AddDriverInfo(newUser);
+        }
+    }
 };
 channel.BasicConsume(queue: "authenInfo", autoAck: true, consumer: consumer);
 var app = builder.Build();

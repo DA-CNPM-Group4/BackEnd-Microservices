@@ -15,7 +15,7 @@ namespace InfoService.Controllers
         {
             return new ResponseMsg {
                 status = true,
-                data = await Repository.Driver.GetDrivers(),
+                data = await Repository.Driver.GetAllDrivers(),
                 message = "Get all driver info success"
             };
         }
@@ -26,7 +26,7 @@ namespace InfoService.Controllers
             return new ResponseMsg
             {
                 status = true,
-                data = await Repository.Driver.CreateDriver(driver),
+                data = await Repository.Driver.AddDriverInfo(driver),
                 message = "Create driver info success"
             };
         }

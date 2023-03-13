@@ -2,7 +2,7 @@
   "Routes": [
     //Info service
     {
-      "UpstreamPathTemplate": "/api/Info/{action}",
+      "UpstreamPathTemplate": "/api/Driver/{action}",
       "UpstreamHttpMethod": [ "Get", "Post" ],
 
       "DownstreamScheme": "http",
@@ -12,7 +12,7 @@
           "Port": 80
         }
       ],
-      "DownstreamPathTemplate": "/api/Info/{action}"
+      "DownstreamPathTemplate": "/api/Driver/{action}"
     },
 
     //Authentication service

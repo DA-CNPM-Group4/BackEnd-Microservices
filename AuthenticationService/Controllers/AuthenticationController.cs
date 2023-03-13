@@ -1,40 +1,44 @@
 ﻿using AuthenticationService.Models;
 using AuthenticationService.RabbitMQServices;
+using Helper;
 using Helper.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
+using System.Data;
+using static Helper.Catalouge;
+using System.Numerics;
 
 namespace AuthenticationService.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class AuthenticationController : ControllerBase
+    public class AuthenticationController : BaseController
     {
-        private readonly AuthDbContext _context;
         private readonly IMessageProducer _producer;
-        public AuthenticationController(AuthDbContext context, IMessageProducer messageProducer)
+        public AuthenticationController(IMessageProducer messageProducer)
         {
-            _context = context;
             _producer = messageProducer;
         }
 
         [HttpPost]
         public async Task<ResponseMsg> Login(object loginInfo)
         {
-            JObject objTemp = JObject.Parse(loginInfo.ToString());
-            string email = (string)objTemp["email"];
-            string phone = (string)objTemp["phone"];
-            string password = (string)objTemp["password"];
-            string role = (string)objTemp["role"];
+            AuthenticationInfo info = await Repository.Authentication.Login(loginInfo);
 
-            if (await _context.AuthenticationInfo.AnyAsync(p => p.Email == email && p.Phone == phone && p.Password == password))
+            if (info is not null)
             {
+                _producer.SendMessage("authenInfo", new
+                {
+                    Status = true,
+                    Message = $"GetDataInfo{info.Role}",
+                    Data = info.AccountId
+                });
                 return new ResponseMsg
                 {
                     status = true,
-                    data = await _context.AuthenticationInfo.Where<AuthenticationInfo>(p => p.Email == email).SingleOrDefaultAsync(),
+                    data = null,
                     message = "Login success"
                 };
             }
@@ -44,7 +48,7 @@ namespace AuthenticationService.Controllers
                 {
                     status = false,
                     data = null,
-                    message = "Login failed"
+                    message = "Login failed, please check your input again"
                 };
             }
         }
@@ -53,68 +57,39 @@ namespace AuthenticationService.Controllers
         public async Task<ResponseMsg> Register(object registerInfo)
         {
             JObject objTemp = JObject.Parse(registerInfo.ToString());
-            string name = (string)objTemp["name"];
-            string email = (string)objTemp["email"];
-            string phone = (string)objTemp["phone"];
-            string password = (string)objTemp["password"];
-            string role = (string)objTemp["role"];
+            AuthenticationInfo registerObj = new AuthenticationInfo
+            {
+                AccountId = new Guid(),
+                Name = (string)objTemp["name"],
+                Email = (string)objTemp["email"],
+                Phone = (string)objTemp["phone"],
+                Password = (string)objTemp["password"],
+                Role = (string)objTemp["role"]
+            };
 
-            if (_context.AuthenticationInfo.Any(p => p.Email == email))
+            if(await Repository.Authentication.Register(registerObj)  == 0)
             {
                 return new ResponseMsg
                 {
                     status = false,
                     data = null,
-                    message = "Register failed, email already exist"
+                    message = "Register failed, try another email"
                 };
             }
             else
             {
-                await _context.AddAsync(new AuthenticationInfo
+                _producer.SendMessage("authenInfo", new
                 {
-                    Name = name,
-                    Password = password,
-                    Email = email,
-                    Phone = phone,
-                    IsThirdPartyAccount = false,
-                    Role = role,
-                    ValidateString = "",
-                    IsValidated = true,
-                    RefreshToken = "",
+                    Status = true,
+                    Message = "AddDataInfo",
+                    Data = registerObj,
                 });
-
-                int registerResult = await _context.SaveChangesAsync();
-                if(registerResult > 0)
+                return new ResponseMsg
                 {
-                    _producer.SendMessage("authenInfo", new
-                    {
-                        Status = true,
-                        Message = "AddInfo",
-                        Data = new {
-                            Name = name,
-                            Password = password,
-                            Email = email,
-                            Phone = phone,
-                            Role = role,
-                        },
-                        
-                    });
-                    return new ResponseMsg
-                    {
-                        status = true,
-                        data = null,
-                        message = "Register success, please login"
-                    };
-                }
-                else
-                {
-                    return new ResponseMsg
-                    {
-                        status = false,
-                        data = null,
-                        message = "Register failed, please try again"
-                    };
-                }
+                    status = true,
+                    data = null,
+                    message = "Register success, please login"
+                };
             }
         }
     }
