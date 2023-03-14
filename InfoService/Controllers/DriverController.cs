@@ -24,12 +24,25 @@ namespace InfoService.Controllers
         [HttpPost]
         public async Task<ResponseMsg> AddInfo(Driver driver)
         {
-            return new ResponseMsg
+            int result = await Repository.Driver.AddDriverInfo(driver);
+            if(result > 0)
             {
-                status = true,
-                data = await Repository.Driver.AddDriverInfo(driver),
-                message = "Create driver info success"
-            };
+                return new ResponseMsg
+                {
+                    status = true,
+                    data = new {accountId = driver.AccountId},
+                    message = "Add driver info success"
+                };
+            }
+            else
+            {
+                return new ResponseMsg
+                {
+                    status = false,
+                    data = null,
+                    message = "Add driver info failed"
+                };
+            }
         }
 
         [HttpPost]
@@ -44,7 +57,7 @@ namespace InfoService.Controllers
                 {
                     status = false,
                     data = null,
-                    message = "Get driver info failed, staff does not exist"
+                    message = "Get driver info failed, driver does not exist"
                 };
             }
             else
@@ -86,7 +99,7 @@ namespace InfoService.Controllers
                 {
                     status = false,
                     data = null,
-                    message = "Get update driver info failed, driver does not exist"
+                    message = "Update driver info failed, driver does not exist"
                 };
             }
         }

@@ -22,6 +22,30 @@ namespace InfoService.Controllers
         }
 
         [HttpPost]
+        public async Task<ResponseMsg> AddInfo(Passenger passenger)
+        {
+            int result = await Repository.Passenger.AddPassengerInfo(passenger);
+            if (result > 0)
+            {
+                return new ResponseMsg
+                {
+                    status = true,
+                    data = new { accountId = passenger.AccountId },
+                    message = "Add passenger info success"
+                };
+            }
+            else
+            {
+                return new ResponseMsg
+                {
+                    status = false,
+                    data = null,
+                    message = "Add passenger info failed"
+                };
+            }
+        }
+
+        [HttpPost]
         public async Task<ResponseMsg> GetPassengerInfoById(object accountObj)
         {
             JObject objTemp = JObject.Parse(accountObj.ToString());

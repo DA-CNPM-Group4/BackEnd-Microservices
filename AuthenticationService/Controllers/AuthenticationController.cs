@@ -78,16 +78,20 @@ namespace AuthenticationService.Controllers
             }
             else
             {
-                _producer.SendMessage("authenInfo", new
-                {
-                    Status = true,
-                    Message = "AddDataInfo",
-                    Data = registerObj,
-                });
+                //_producer.SendMessage("authenInfo", new
+                //{
+                //    Status = true,
+                //    Message = "AddDataInfo",
+                //    Data = registerObj,
+                //});
                 return new ResponseMsg
                 {
                     status = true,
-                    data = null,
+                    data = new
+                    {
+                        accountId = registerObj.AccountId,
+                        name = registerObj.Name
+                    },
                     message = "Register success, please login"
                 };
             }

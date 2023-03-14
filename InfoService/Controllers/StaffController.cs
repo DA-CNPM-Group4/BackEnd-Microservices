@@ -22,6 +22,30 @@ namespace InfoService.Controllers
         }
 
         [HttpPost]
+        public async Task<ResponseMsg> AddInfo(Staff staff)
+        {
+            int result = await Repository.Staff.AddStaffInfo(staff);
+            if (result > 0)
+            {
+                return new ResponseMsg
+                {
+                    status = true,
+                    data = new { accountId = staff.AccountId },
+                    message = "Add staff info success"
+                };
+            }
+            else
+            {
+                return new ResponseMsg
+                {
+                    status = false,
+                    data = null,
+                    message = "Add staff info failed"
+                };
+            }
+        }
+
+        [HttpPost]
         public async Task<ResponseMsg> GetStaffInfoById(object accountObj)
         {
             JObject objTemp = JObject.Parse(accountObj.ToString());
