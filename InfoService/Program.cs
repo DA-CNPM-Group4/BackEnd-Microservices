@@ -9,6 +9,7 @@ using Newtonsoft.Json.Linq;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
+using System.Threading.Channels;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,12 +22,15 @@ builder.Services.AddTransient<IMessageProducer, RabbitmqProducer>();
 //ServiceRepository serviceRepository = new ServiceRepository();
 
 ////Declare rabbitmq consumer
-//var factory = new ConnectionFactory { Uri = new Uri("amqps://gtyepqer:MFoGZBk-zqtRAf8fZoKPYIdBIcQTOp8T@fly.rmq.cloudamqp.com/gtyepqer") };
-//var connection = factory.CreateConnection();
-//using var channel = connection.CreateModel();
-//channel.ExchangeDeclare(exchange: "info", type: ExchangeType.Direct);
-//channel.QueueDeclare(queue: "authenInfo", exclusive: false);
-//channel.QueueBind(queue: "authenInfo", exchange: "info", routingKey: "authenInfo");
+var factory = new ConnectionFactory { Uri = new Uri("amqps://gtyepqer:MFoGZBk-zqtRAf8fZoKPYIdBIcQTOp8T@fly.rmq.cloudamqp.com/gtyepqer") };
+var connection = factory.CreateConnection();
+using var channel = connection.CreateModel();
+channel.ExchangeDeclare(exchange: "info", type: ExchangeType.Direct);
+channel.QueueDeclare(queue: "info", exclusive: false);
+channel.QueueBind(queue: "info", exchange: "info", routingKey: "info");
+RabbitmqConsumer rabbitmqConsumer = new RabbitmqConsumer(channel);
+channel.BasicConsume(queue: "info", autoAck: true, consumer: rabbitmqConsumer);
+
 
 //var consumer = new EventingBasicConsumer(channel);
 //consumer.Received += async (model, eventArgs) =>

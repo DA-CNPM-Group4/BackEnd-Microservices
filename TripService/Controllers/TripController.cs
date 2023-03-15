@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Helper.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TripService.Models;
+using static Helper.Catalouge;
 
 namespace TripService.Controllers
 {
@@ -7,5 +10,55 @@ namespace TripService.Controllers
     [ApiController]
     public class TripController : BaseController
     {
+        [HttpPost]
+        public async Task<ResponseMsg> AcceptRequest(string driverId, string requestId)
+        {
+            Guid tripId = await Repository.Trip.AcceptTrip(driverId, requestId);
+            return new ResponseMsg
+            {
+                status = tripId != Guid.Empty ? true : false,
+                data = tripId,
+                message = tripId != Guid.Empty ? "Accept request successfully" : "Failed to accept this request",
+            };
+        }
+
+        [HttpPost]
+        public async Task<ResponseMsg> FinishTrip(string tripId)
+        {
+            int result = await Repository.Trip.CompleteTrip(Guid.Parse(tripId));
+
+            return new ResponseMsg
+            {
+                status = result > 0 ? true : false,
+                data = null,
+                message = result > 0 ? "Trip is finished" : "Failed to finish trip",
+            };
+        }
+
+        [HttpGet]
+        public async Task<ResponseMsg> GetCurrentTrip(string tripId)
+        {
+            Models.Trip result = await Repository.Trip.GetTrip(Guid.Parse(tripId));
+            return new ResponseMsg
+            {
+                status = result != null ? true : false,
+                data = result,
+                message = result != null ? "Get trip successfully" : "Failed to get trip",
+            };
+        }
+
+
+
+        [HttpGet]
+        public async Task<ResponseMsg> GetCurrentTripForPassenger(string passengerId)
+        {
+            Models.Trip trip = await Repository.Trip.GetTripForPassenger(Guid.Parse(passengerId));
+            return new ResponseMsg
+            {
+                status = trip != null ? true : false,
+                data = trip,
+                message = trip != null ? "Get trip successfully" : "Failed to get trip",
+            };
+        }
     }
 }
