@@ -11,11 +11,11 @@ namespace TripService.Repositories
     {
         private readonly IConfiguration _configuration;
         private readonly FirebaseService _fireBaseServices;
-        private readonly RabbitmqProducer _messageProducer;
+        //private readonly RabbitmqProducer _messageProducer;
         public TripRepository(TripDbContext context) : base(context)
         {
             _fireBaseServices = new FirebaseService();
-            _messageProducer = new RabbitmqProducer(_configuration);
+            //_messageProducer = new RabbitmqProducer(_configuration);
         }
 
         public async Task<Guid> AcceptTrip(string driverId, string requestId)

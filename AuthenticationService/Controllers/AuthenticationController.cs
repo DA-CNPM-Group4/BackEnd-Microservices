@@ -1,5 +1,5 @@
 ﻿using AuthenticationService.Models;
-using AuthenticationService.RabbitMQServices;
+//using AuthenticationService.RabbitMQServices;
 using Helper;
 using Helper.Models;
 using Microsoft.AspNetCore.Http;
@@ -16,11 +16,11 @@ namespace AuthenticationService.Controllers
     [ApiController]
     public class AuthenticationController : BaseController
     {
-        private readonly IMessageProducer _producer;
-        public AuthenticationController(IMessageProducer messageProducer)
-        {
-            _producer = messageProducer;
-        }
+        //private readonly IMessageProducer _producer;
+        //public AuthenticationController(IMessageProducer messageProducer)
+        //{
+        //    _producer = messageProducer;
+        //}
 
         [HttpPost]
         public async Task<ResponseMsg> Login(object loginInfo)

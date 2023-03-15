@@ -1,13 +1,13 @@
-using AuthenticationService.RabbitMQServices;
+//using AuthenticationService.RabbitMQServices;
+//using InfoService.RabbitMQServices;
+//using RabbitMQ.Client;
+//using RabbitMQ.Client.Events;
 using Helper;
 using InfoService.Models;
-using InfoService.RabbitMQServices;
 using InfoService.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
 using System.Text;
 using System.Threading.Channels;
 
@@ -16,7 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddTransient<IMessageProducer, RabbitmqProducer>();
+//builder.Services.AddTransient<IMessageProducer, RabbitmqProducer>();
 
 //Repository declare
 //ServiceRepository serviceRepository = new ServiceRepository();

@@ -1,11 +1,11 @@
-using TripService.RabbitMQServices;
+//using TripService.RabbitMQServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddTransient<IMessageProducer, RabbitmqProducer>();
+//builder.Services.AddTransient<IMessageProducer, RabbitmqProducer>();
 
 var app = builder.Build();
 
