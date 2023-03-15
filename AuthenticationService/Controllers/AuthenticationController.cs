@@ -29,12 +29,12 @@ namespace AuthenticationService.Controllers
 
             if (info is not null)
             {
-                _producer.SendMessage("info", new
-                {
-                    status = true,
-                    message = $"getdatainfo{info.Role}",
-                    data = info.AccountId
-                });
+                //_producer.SendMessage("info", new
+                //{
+                //    status = true,
+                //    message = $"getdatainfo{info.Role}",
+                //    data = info.AccountId
+                //});
                 return new ResponseMsg
                 {
                     status = true,
