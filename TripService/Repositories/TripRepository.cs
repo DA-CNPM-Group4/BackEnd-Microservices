@@ -21,6 +21,10 @@ namespace TripService.Repositories
         public async Task<Guid> AcceptTrip(string driverId, string requestId)
         {
             TripRequest tripRequest = await context.TripRequest.FindAsync(Guid.Parse(requestId));
+            if(tripRequest == null)
+            {
+                return Guid.Empty;
+            }
             if(tripRequest.RequestStatus == Catalouge.Request.MovedToTrip)
             {
                 return Guid.Empty;
@@ -44,6 +48,7 @@ namespace TripService.Repositories
                 Distance = tripRequest.Distance,
                 Price = tripRequest.Price,
                 VehicleType = tripRequest.VehicleType,
+                RequestId = tripRequest.RequestId,
             };
             await context.Trip.AddAsync(trip);
             _fireBaseServices.AddNewTrip(trip);
@@ -52,9 +57,21 @@ namespace TripService.Repositories
             return trip.TripId;
         }
 
-        public async Task<Trip> GetTripForPassenger(Guid passengerId)
+        public async Task<int> PickedPassenger(Guid tripId)
         {
-            Trip trip = await context.Trip.FirstOrDefaultAsync(t => t.PassengerId == passengerId && t.TripStatus == Catalouge.Trip.PickingUpCus);
+            Trip trip = await context.Trip.FindAsync(tripId);
+            if (trip != null)
+            {
+                trip.TripStatus = Catalouge.Trip.OnTheWay;
+                _fireBaseServices.UpdateOnGoingTrip(trip);
+                return await context.SaveChangesAsync();
+            }
+            return 0;
+        }
+
+        public async Task<Trip> GetTripForPassenger(Guid passengerId, Guid requestId)
+        {
+            Trip trip = await context.Trip.FirstOrDefaultAsync(t => t.PassengerId == passengerId && t.RequestId == requestId);
             return trip;
         }
 
@@ -91,6 +108,11 @@ namespace TripService.Repositories
             trip.TripStatus = Catalouge.Trip.Done;
             _fireBaseServices.RemoveTrip(tripId);
             return await context.SaveChangesAsync();
+        }
+
+        public async Task<List<Trip>> GetTrips()
+        {
+            return await context.Trip.ToListAsync();
         }
     }
 }

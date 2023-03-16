@@ -23,9 +23,9 @@ namespace TripService.Repositories
         {
             return new
             {
-                Motorbike = distance*1.0*12,
-                Car4S = distance*1.0*15,
-                Car7S = distance*1.0*18,
+                Motorbike = distance*1.0*12000,
+                Car4S = distance*1.0*15000,
+                Car7S = distance*1.0*18000,
             };
         }
     }

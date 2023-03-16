@@ -50,14 +50,37 @@ namespace TripService.Controllers
 
 
         [HttpGet]
-        public async Task<ResponseMsg> GetCurrentTripForPassenger(string passengerId)
+        public async Task<ResponseMsg> GetCurrentTripForPassenger(string passengerId, string requestId)
         {
-            Models.Trip trip = await Repository.Trip.GetTripForPassenger(Guid.Parse(passengerId));
+            Models.Trip trip = await Repository.Trip.GetTripForPassenger(Guid.Parse(passengerId), Guid.Parse(requestId));
             return new ResponseMsg
             {
                 status = trip != null ? true : false,
                 data = trip,
                 message = trip != null ? "Get trip successfully" : "Failed to get trip",
+            };
+        }
+
+        [HttpGet]
+        public async Task<ResponseMsg> PickedPassenger(string tripId)
+        {
+            int result = await Repository.Trip.PickedPassenger(Guid.Parse(tripId));
+            return new ResponseMsg
+            {
+                status = result > 0 ? true : false,
+                data = result,
+                message = result > 0 ? "Update status picked passenger successfully" : "Failed to update status picked passenger"
+            };
+        }
+
+        [HttpGet]
+        public async Task<ResponseMsg> GetTrips()
+        {
+            return new ResponseMsg
+            {
+                status = true,
+                data = await Repository.Trip.GetTrips(),
+                message = "Get trips successfully"
             };
         }
     }

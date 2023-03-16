@@ -24,5 +24,6 @@ namespace TripService.Models
         public int? Price { get; set; }
         public string? VehicleType { get; set; } // Danh muc khai bao trong class Vehicle
         public int? TimeSecond { get; set; }
+        public Guid? RequestId { get; set; }
     }
 }

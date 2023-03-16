@@ -42,6 +42,11 @@ namespace TripService.FireBaseServices
             await firebaseClient.Child("requests").Child(requestId.ToString()).DeleteAsync();
         }
 
+        public async void UpdateOnGoingTrip(Trip updatedTrip)
+        {
+            await firebaseClient.Child("trips").Child(updatedTrip.TripId.ToString).PutAsync(updatedTrip);
+        }
+
         public async void RemoveTrip(Guid tripId)
         {
             await firebaseClient.Child("trips").Child(tripId.ToString()).DeleteAsync(); 
