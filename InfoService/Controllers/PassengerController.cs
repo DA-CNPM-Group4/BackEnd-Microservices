@@ -57,16 +57,16 @@ namespace InfoService.Controllers
                 {
                     status = false,
                     data = null,
-                    message = "Get driver info failed, staff does not exist"
+                    message = "Get passenger info failed, passenger does not exist"
                 };
             }
             else
             {
                 return new ResponseMsg
                 {
-                    status = false,
+                    status = true,
                     data = passenger,
-                    message = "Get driver info success"
+                    message = "Get passenger info success"
                 };
             }
         }

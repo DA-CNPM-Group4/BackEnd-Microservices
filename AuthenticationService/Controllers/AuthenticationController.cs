@@ -22,6 +22,12 @@ namespace AuthenticationService.Controllers
         //    _producer = messageProducer;
         //}
 
+        [HttpGet]
+        public async Task<string> GetRandomString()
+        {
+            return "This is an random string";
+        }
+
         [HttpPost]
         public async Task<ResponseMsg> Login(object loginInfo)
         {
