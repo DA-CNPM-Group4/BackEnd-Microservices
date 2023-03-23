@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddCors();
+builder.Services.AddJwtAuthExtension();
 //builder.Services.AddTransient<IMessageProducer, RabbitmqProducer>();
 //builder.Services.AddCors(p => p.AddPolicy("corspolicy", build =>
 //{

@@ -1,4 +1,5 @@
 using AuthenticationService;
+using JwtTokenManager;
 //using AuthenticationService.RabbitMQServices;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 //builder.Services.AddTransient<IMessageProducer, RabbitmqProducer>();
 builder.Services.AddControllers();
 builder.Services.AddCors();
+builder.Services.AddJwtAuthExtension();
+builder.Services.AddSingleton<TokenHandler>();
+
 //builder.Services.AddCors(p => p.AddPolicy("corspolicy", build =>
 //{
 //    build.SetIsOriginAllowed(isOriginAllowed: _ => true).AllowAnyHeader().AllowAnyMethod().AllowCredentials();
@@ -23,6 +27,7 @@ app.UseCors(builder => builder
     .AllowAnyHeader()
     .WithExposedHeaders("Content-Disposition")
 );
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
