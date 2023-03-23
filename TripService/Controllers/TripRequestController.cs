@@ -36,18 +36,19 @@ namespace TripService.Controllers
         }
 
         [HttpGet]
-        public async Task<ResponseMsg> CancelRequestByPassenger(string requestId)
+        public async Task<ResponseMsg> CancelRequest(string requestId)
         {
+            int result = await Repository.TripRequest.CancelRequest(Guid.Parse(requestId));
             return new ResponseMsg
             {
-                status = true,
+                status = result > 0 ? true : false,
                 data = null,
-                message = null,
+                message = result > 0 ? "Cancel request successfully" : "Failed to cancel request",
             };
         }
 
         [HttpGet]
-        public async Task<ResponseMsg> CancelRequestByDriver(string requestId)
+        public async Task<ResponseMsg> CancelTrip(string tripId)
         {
             return new ResponseMsg
             {

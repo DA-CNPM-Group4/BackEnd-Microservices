@@ -36,6 +36,42 @@ namespace TripService.Controllers
         }
 
         [HttpGet]
+        public async Task<ResponseMsg> CancelTrip(string tripId)
+        {
+            int result = await Repository.Trip.CancelTrip(Guid.Parse(tripId));
+            return new ResponseMsg {
+                status = result > 0 ? true : false,
+                data = null,
+                message = result > 0 ? "Cancel trip successfully" : "Failed to cancel this trip"
+            };
+            
+        }
+
+        [HttpGet]
+        public async Task<ResponseMsg> GetPassengerTrips(string passengerId)
+        {
+            List<Models.Trip> trips = await Repository.Trip.GetListTripsByPassenger(Guid.Parse(passengerId));
+            return new ResponseMsg
+            {
+                status = trips != null ? true : false,
+                data = trips,
+                message = trips != null ? "Get trips by passenger successfully" : "Failed to get trips by passenger"
+            };
+        }
+
+        [HttpGet]
+        public async Task<ResponseMsg> GetDriverTrips(string driverId)
+        {
+            List<Models.Trip> trips = await Repository.Trip.GetListTripsByDriver(Guid.Parse(driverId));
+            return new ResponseMsg
+            {
+                status = trips != null ? true : false,
+                data = trips,
+                message = trips != null ? "Get trips by driver successfully" : "Failed to get trips by driver"
+            };
+        }
+
+        [HttpGet]
         public async Task<ResponseMsg> GetCurrentTrip(string tripId)
         {
             Models.Trip result = await Repository.Trip.GetTrip(Guid.Parse(tripId));

@@ -1,4 +1,5 @@
-﻿using TripService.FireBaseServices;
+﻿using Helper;
+using TripService.FireBaseServices;
 using TripService.Models;
 
 namespace TripService.Repositories
@@ -16,6 +17,14 @@ namespace TripService.Repositories
             
             await context.TripRequest.AddAsync(request);
             _fireBaseService.AddNewRequest(request);
+            return await context.SaveChangesAsync();
+        }
+
+        public async Task<int> CancelRequest(Guid requestId)
+        {
+            TripRequest request = await context.TripRequest.FindAsync(requestId);
+            request.RequestStatus = Catalouge.Request.Canceled;
+            _fireBaseService.RemoveRequest(requestId);
             return await context.SaveChangesAsync();
         }
 

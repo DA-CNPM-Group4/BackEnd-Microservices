@@ -75,6 +75,26 @@ namespace TripService.Repositories
             return trip;
         }
 
+        public async Task<List<Trip>> GetListTripsByDriver(Guid driverId)
+        {
+            List<Trip> trips = await context.Trip.Where(t => t.DriverId == driverId).ToListAsync(); 
+            return trips;
+        }
+
+        public async Task<List<Trip>> GetListTripsByPassenger(Guid passengerId)
+        {
+            List<Trip> trips = await context.Trip.Where(t => t.PassengerId == passengerId).ToListAsync();
+            return trips;
+        }
+
+        public async Task<int> CancelTrip(Guid tripId)
+        {
+            Trip trip = await context.Trip.FindAsync(tripId);
+            trip.TripStatus = Catalouge.Trip.CanceledByDriver;
+            _fireBaseServices.RemoveTrip(tripId);
+            return await context.SaveChangesAsync();
+        }
+
         public async Task<Trip> GetTrip(Guid tripId)
         {
             Trip trip = await context.Trip.FindAsync(tripId);
