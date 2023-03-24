@@ -1,4 +1,5 @@
 //using TripService.RabbitMQServices;
+using JwtTokenManager;
 
 var builder = WebApplication.CreateBuilder(args);
 

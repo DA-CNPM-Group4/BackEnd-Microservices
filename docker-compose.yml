@@ -4,49 +4,49 @@ networks:
     backend:
 
 services:
-  infodb:
-    container_name: info-db
-    image: mcr.microsoft.com/mssql/server
-    environment:
-        - ACCEPT_EULA=Y
-        - SA_PASSWORD=vuhiep2k1072001
-    networks:
-        - backend
-    ports:
-        - 8005:1433
+  #infodb:
+  #  container_name: info-db
+  #  image: mcr.microsoft.com/mssql/server
+  #  environment:
+  #      - ACCEPT_EULA=Y
+  #      - SA_PASSWORD=vuhiep2k1072001
+  #  networks:
+  #      - backend
+  #  ports:
+  #      - 8005:1433
 
-  tripdb:
-    container_name: trip-db
-    image: mcr.microsoft.com/mssql/server
-    environment:
-        - ACCEPT_EULA=Y
-        - SA_PASSWORD=vuhiep2k1072001
-    networks:
-        - backend
-    ports:
-        - 8006:1433
+  #tripdb:
+  #  container_name: trip-db
+  #  image: mcr.microsoft.com/mssql/server
+  #  environment:
+  #      - ACCEPT_EULA=Y
+  #      - SA_PASSWORD=vuhiep2k1072001
+  #  networks:
+  #      - backend
+  #  ports:
+  #      - 8006:1433
 
-  chatdb:
-    container_name: chat-db
-    image: mcr.microsoft.com/mssql/server
-    environment:
-        - ACCEPT_EULA=Y
-        - SA_PASSWORD=vuhiep2k1072001
-    networks:
-        - backend
-    ports:
-        - 8007:1433
+  #chatdb:
+  #  container_name: chat-db
+  #  image: mcr.microsoft.com/mssql/server
+  #  environment:
+  #      - ACCEPT_EULA=Y
+  #      - SA_PASSWORD=vuhiep2k1072001
+  #  networks:
+  #      - backend
+  #  ports:
+  #      - 8007:1433
 
-  authenticationdb:
-    container_name: authentication-db
-    image: mcr.microsoft.com/mssql/server
-    environment:
-        - ACCEPT_EULA=Y
-        - SA_PASSWORD=vuhiep2k1072001
-    networks:
-        - backend
-    ports:
-        - 8008:1433
+  #authenticationdb:
+  #  container_name: authentication-db
+  #  image: mcr.microsoft.com/mssql/server
+  #  environment:
+  #      - ACCEPT_EULA=Y
+  #      - SA_PASSWORD=vuhiep2k1072001
+  #  networks:
+  #      - backend
+  #  ports:
+  #      - 8008:1433
 
   infoservice:
     container_name: info-service
@@ -56,10 +56,10 @@ services:
       dockerfile: InfoService/Dockerfile
     networks:
         - backend
-    environment:
-        - DB_HOST=infodb
-        - DB_NAME=dms_info
-        - DB_SA_PASSWORD=vuhiep2k1072001
+    #environment:
+    #    - DB_HOST=infodb
+    #    - DB_NAME=dms_info
+    #    - DB_SA_PASSWORD=vuhiep2k1072001
 
   apigateway:
     container_name: api-gateway
@@ -80,10 +80,10 @@ services:
       dockerfile: AuthenticationService/Dockerfile
     networks:
         - backend
-    environment:
-        - DB_HOST=authenticationdb
-        - DB_NAME=dms_authentication
-        - DB_SA_PASSWORD=vuhiep2k1072001
+    #environment:
+    #    - DB_HOST=authenticationdb
+    #    - DB_NAME=dms_authentication
+    #    - DB_SA_PASSWORD=vuhiep2k1072001
 
   tripservice:
     container_name: trip-service
@@ -93,10 +93,10 @@ services:
       dockerfile: TripService/Dockerfile
     networks:
         - backend
-    environment:
-        - DB_HOST=tripdb
-        - DB_NAME=dms_trip
-        - DB_SA_PASSWORD=vuhiep2k1072001
+    #environment:
+    #    - DB_HOST=tripdb
+    #    - DB_NAME=dms_trip
+    #    - DB_SA_PASSWORD=vuhiep2k1072001
 
   chatservice:
     container_name: chat-service
@@ -106,8 +106,8 @@ services:
       dockerfile: ChatService/Dockerfile
     networks:
         - backend
-    environment:
-        - DB_HOST=chatdb
-        - DB_NAME=dms_chat
-        - DB_SA_PASSWORD=vuhiep2k1072001
+    #environment:
+    #    - DB_HOST=chatdb
+    #    - DB_NAME=dms_chat
+    #    - DB_SA_PASSWORD=vuhiep2k1072001
 
