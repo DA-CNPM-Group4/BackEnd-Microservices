@@ -12,7 +12,7 @@ namespace AuthenticationService.Models
         public string Name { get; set; }
         public byte[] Password { get; set; }
         public string Email { get; set; }
-        public string Phone { get; set; }
+        public string? Phone { get; set; }
         public bool IsThirdPartyAccount { get; set; }
         public string Role { get; set; } // Khai bao danh muc cho value nay
         public string? ValidateString { get; set; }

@@ -11,6 +11,7 @@ namespace InfoService.Models
         public Guid VehicleId { get; set; }
         public Guid DriverId { get; set; }
         public string VehicleType { get; set; } // Khai bao danh muc cho value nay
+        public string LicensePlatesNum { get; set; }
         public string? VehicleName { get; set; }
         public string? Brand { get; set; }
     }

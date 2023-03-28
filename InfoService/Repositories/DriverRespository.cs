@@ -15,16 +15,31 @@ namespace InfoService.Repositories
             return await context.SaveChangesAsync();
         }
 
+        // -4 email already exist
+        // -3 phone already exist
         public async Task<int> UpdateDriverInfo(Driver driver)
         {
-            Driver destination = await context.Driver.FindAsync(driver.AccountId);
-
-            //destination.Phone = source.Phone;
-            //destination.Email = source.Email;
-            destination.IdentityNumber = driver.IdentityNumber;
-            destination.Name = driver.Name;
-            destination.Gender = driver.Gender;
-            destination.Address = driver.Address;
+            Driver dri = await context.Driver.FindAsync(driver.AccountId);
+            if(context.Driver.Where(p => p.Phone == driver.Phone).Any() == true)
+            {
+                if(dri.Phone != driver.Phone)
+                {
+                    return -3;
+                }
+            }
+            if(context.Driver.Where(p => p.Email == driver.Email).Any() == true)
+            {
+                if(dri.Email != driver.Email)
+                {
+                    return -4;
+                }
+            }
+            dri.Phone = driver.Phone;
+            dri.Email = driver.Email;
+            dri.IdentityNumber = driver.IdentityNumber;
+            dri.Name = driver.Name;
+            dri.Gender = driver.Gender;
+            dri.Address = driver.Address;
             return await context.SaveChangesAsync();
         }
         public async Task<bool> CheckDriverExist(Guid AccountId)

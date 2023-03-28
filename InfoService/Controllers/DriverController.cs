@@ -86,11 +86,13 @@ namespace InfoService.Controllers
                         message = "Update driver info success"
                     };
                 }
+                // -4 email already exist
+                // -3 phone already exist
                 return new ResponseMsg
                 {
                     status = false,
                     data = null,
-                    message = "Update failed, nothing changed"
+                    message = res == -3 ? "Update failed, phone already existed": res == -4 ? "Update failed, email already existed" : "Update failed, nothing changed"
                 };
             }
             else

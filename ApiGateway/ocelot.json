@@ -47,7 +47,7 @@
 
     //Chat service
     {
-      "UpstreamPathTemplate": "/api/Chat/{action}",
+      "UpstreamPathTemplate": "/api/Chat/{controller}/{action}",
       "UpstreamHttpMethod": [ "Get", "Post" ],
 
       "DownstreamScheme": "http",
@@ -57,7 +57,7 @@
           "Port": 80
         }
       ],
-      "DownstreamPathTemplate": "/api/Chat/{action}"
+      "DownstreamPathTemplate": "/api/Chat/{controller}/{action}"
     }
   ],
   "GlobalConfiguration": {

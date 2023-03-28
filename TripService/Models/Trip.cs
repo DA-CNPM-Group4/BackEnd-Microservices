@@ -14,6 +14,7 @@ namespace TripService.Models
         public DateTime? CompleteTime { get; set; }
         public DateTime? CreatedTime { get; set; }
         public string? Destination { get; set; }
+        public string? PassengerPhone { get; set; }
         public double? LatDesAddr { get; set; }
         public double? LongDesAddr { get; set; }
         public string? StartAddress { get; set; }

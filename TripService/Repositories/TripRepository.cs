@@ -37,6 +37,7 @@ namespace TripService.Repositories
                 PassengerId = tripRequest.PassengerId,
                 StaffId = tripRequest.StaffId,
                 VehicleId = Guid.NewGuid(),
+                PassengerPhone = tripRequest.PassengerPhone,
                 CreatedTime = DateTime.UtcNow,
                 Destination = tripRequest.Destination,
                 LatDesAddr = tripRequest.LatDesAddr,

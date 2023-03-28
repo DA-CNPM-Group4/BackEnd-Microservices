@@ -25,17 +25,31 @@ namespace InfoService.Repositories
             return await context.Staff.FindAsync(AccountId);
         }
 
+        // -4 email already exist
+        // -3 phone already exist
         public async Task<int> UpdateStaffInfo(Staff staff)
         {
-            Staff destination = await context.Staff.FindAsync(staff.AccountId);
-
-            //destination.Phone = source.Phone;
-            //destination.Email = source.Email;
-
-            destination.IdentityNumber = staff.IdentityNumber;
-            destination.Name = staff.Name;
-            destination.Gender = staff.Gender;
-            destination.Address = staff.Address;
+            Staff stf = await context.Staff.FindAsync(staff.AccountId);
+            if (context.Staff.Where(p => p.Phone == staff.Phone).Any() == true)
+            {
+                if(stf.Phone != staff.Phone)
+                {
+                    return -3;
+                }
+            }
+            if (context.Staff.Where(p => p.Email == staff.Email).Any() == true)
+            {
+                if(stf.Email != staff.Email)
+                {
+                    return -4;
+                }
+            }
+            stf.Phone = staff.Phone;
+            stf.Email = staff.Email;
+            stf.IdentityNumber = staff.IdentityNumber;
+            stf.Name = staff.Name;
+            stf.Gender = staff.Gender;
+            stf.Address = staff.Address;
             return await context.SaveChangesAsync();
         }
 

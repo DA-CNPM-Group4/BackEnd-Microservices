@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ChatService.Controllers
 {
-    [Route("api/[controller]/[action]")]
+    [Route("api/Chat/[controller]/[action]")]
     [ApiController]
-    public class ChatController : ControllerBase
+    public class ChatController : BaseController
     {
     }
 }

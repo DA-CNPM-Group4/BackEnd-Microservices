@@ -22,6 +22,8 @@ app.UseCors(builder => builder
     .AllowAnyHeader()
     .WithExposedHeaders("Content-Disposition")
 );
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

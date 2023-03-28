@@ -33,7 +33,7 @@ namespace JwtTokenManager
             return RefreshToken;
         }
 
-        public Guid GetUserIdFromExpiredToken(string token)
+        public string GetUserIdFromExpiredToken(string token)
         {
             var tokenValidationParameters = new TokenValidationParameters
             {
@@ -45,7 +45,8 @@ namespace JwtTokenManager
             };
             var tokenHandler = new JwtSecurityTokenHandler();
             var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out _);
-            return Guid.Parse(principal.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            return principal.FindFirstValue(ClaimTypes.NameIdentifier);
         }
     }
 }

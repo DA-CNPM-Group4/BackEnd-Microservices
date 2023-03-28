@@ -23,15 +23,30 @@ namespace InfoService.Repositories
             return await context.Passenger.FindAsync(AccountId);
         }
 
+        // -4 email already exist
+        // -3 phone already exist
         public async Task<int> UpdatePassengerInfo(Passenger passenger)
         {
-            Passenger destination = await context.Passenger.FindAsync(passenger.AccountId);
+            Passenger pass = await context.Passenger.FindAsync(passenger.AccountId);
+            if (context.Passenger.Where(p => p.Phone == passenger.Phone).Any() == true)
+            {
+                if(pass.Phone != passenger.Phone)
+                {
+                    return -3;
+                }
+            }
+            if (context.Passenger.Where(p => p.Email == passenger.Email).Any() == true)
+            {
+                if(pass.Email != passenger.Email)
+                {
+                    return -4;
+                }
+            }
 
-            //destination.Phone = source.Phone;
-            //destination.Email = source.Email;
-
-            destination.Name = passenger.Name;
-            destination.Gender = passenger.Gender;
+            pass.Phone = passenger.Phone;
+            pass.Email = passenger.Email;
+            pass.Name = passenger.Name;
+            pass.Gender = passenger.Gender;
             return await context.SaveChangesAsync();
         }
         public async Task<bool> CheckPassengerExist(Guid AccountId)

@@ -106,5 +106,45 @@ namespace AuthenticationService.Repositories
             }
             return await context.SaveChangesAsync();
         }
+        public async Task<AuthenticationInfo> ValidateRefreshToken(string RefreshToken, Guid UserId)
+        {
+            AuthenticationInfo user = await context.AuthenticationInfo.Where(p => p.AccountId == UserId && p.RefreshToken == RefreshToken && p.RefreshTokenExpiredDate < DateTime.UtcNow).SingleOrDefaultAsync();
+            return user;
+        }
+
+        public async Task<int> RegisterWithGoogleInfo(string email, string name, string role)
+        {
+            AuthenticationInfo usr = new AuthenticationInfo
+            {
+                Email = email,
+                Role = role,
+                Name = name,
+                Password = Helper.DoStuff.HashString(email + "^@#%!@(!&^$" + "gggggggg"),
+                IsValidated = true
+            };
+            await context.AuthenticationInfo.AddAsync(usr);
+            return await context.SaveChangesAsync();
+        }
+
+        public async Task<bool> CheckEmailExisted(string email)
+        {
+            bool existed = await context.AuthenticationInfo.AnyAsync(p => p.Email == email);
+            return existed;
+        }
+
+        public async Task<int> UpdateUserInfo(Guid userId, string name)
+        {
+            AuthenticationInfo res = await GetUserById(userId);
+            res.Name = name;
+            return await context.SaveChangesAsync();
+        }
+
+        public async Task<AuthenticationInfo> LoginWithEmail(string email)
+        {
+            var usr = from user in context.AuthenticationInfo
+                      where user.Email == email
+                      select user;
+            return await usr.SingleOrDefaultAsync();
+        }
     }
 }
