@@ -21,7 +21,8 @@ namespace AuthenticationService.Repositories
                 Name = (string)objTemp["name"],
                 Email = (string)objTemp["email"],
                 Phone = (string)objTemp["phone"],
-                Role = (string)objTemp["role"]
+                Role = (string)objTemp["role"],
+                IsValidated = false
             };
             string registerPassword = (string)objTemp["password"];
             if(await CheckEmailAndPhoneNumExisted(registerData.Email, registerData.Phone) == true)
@@ -132,6 +133,27 @@ namespace AuthenticationService.Repositories
             return existed;
         }
 
+        public async Task<bool> CheckEmailExistedInAccount(Guid userId, string email)
+        {
+            bool existed = await context.AuthenticationInfo.AnyAsync(p => p.AccountId == userId && p.Email == email);
+            return existed;
+        }
+
+        //-2: account not existed, -3: account already activated
+        public async Task<int> CheckAccountNotValidated(Guid userId)
+        {
+            AuthenticationInfo user = await context.AuthenticationInfo.FindAsync(userId);
+            if (user != null)
+            {
+                if(user.IsValidated == true)
+                {
+                    return -3;
+                }
+                return 1;
+            }
+            return -2;
+        }
+
         public async Task<int> UpdateUserInfo(Guid userId, string name)
         {
             AuthenticationInfo res = await GetUserById(userId);
@@ -145,6 +167,73 @@ namespace AuthenticationService.Repositories
                       where user.Email == email
                       select user;
             return await usr.SingleOrDefaultAsync();
+        }
+
+        public async Task<EmailSender> GetMailSender()
+        {
+            string sql = "Select * from EmailSender";
+            EmailSender sender = await context.EmailSender.FromSqlRaw<EmailSender>(sql).SingleOrDefaultAsync();
+            return sender;
+        }
+
+        public async Task<int> AddMailSender(EmailSender sender)
+        {
+            await context.EmailSender.AddAsync(sender);
+            return await context.SaveChangesAsync();
+        }
+
+        public async Task<int> IncreaseMailSent(string account)
+        {
+            EmailSender sender = await context.EmailSender.Where(p => p.usr == account).SingleOrDefaultAsync();
+            sender.EmailSended += 1;
+            return await context.SaveChangesAsync();
+        }
+
+        // 1: Validate email string, 2: Reset password string
+        public async Task<int> SaveOTPStr(int type, string OTP, string email)
+        {
+            AuthenticationInfo user = await context.AuthenticationInfo.Where(p => p.Email == email).SingleOrDefaultAsync();
+            if (type == 1)
+            {
+                user.ValidateEmailString = OTP;
+            }
+            else if(type == 2)
+            {
+                user.ResetPasswordString = OTP;
+            }
+            return await context.SaveChangesAsync();
+        }
+
+        //-2: OTP invalid
+        public async Task<int> ValidateEmail(string OTP, string email)
+        {
+            AuthenticationInfo user = await context.AuthenticationInfo.Where(p => p.Email == email).SingleOrDefaultAsync();
+            if(user.ValidateEmailString == OTP)
+            {
+                user.IsValidated = true;
+                user.ValidateEmailString = "";
+                return await context.SaveChangesAsync();
+            }
+            return -2;
+        }
+
+        //-2: OTP invalid
+        public async Task<int> ResetPassword(string newPassword, string email, string OTP)
+        {
+            AuthenticationInfo user = await context.AuthenticationInfo.Where(p => p.Email == email).SingleOrDefaultAsync();
+            if(user.ResetPasswordString == OTP)
+            {
+                user.ResetPasswordString = "";
+                user.Password = Helper.DoStuff.HashString(email + "^@#%!@(!&^$" + newPassword);
+                return await context.SaveChangesAsync();
+            }
+            return -2;
+        }
+
+        public async Task<int> ClearEmailSender()
+        {
+            context.RemoveRange(context.EmailSender);
+            return await context.SaveChangesAsync();
         }
     }
 }

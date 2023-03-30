@@ -17,6 +17,9 @@ using System.Net.Http;
 using System;
 using Azure.Core;
 using System.Security.Cryptography.Xml;
+using Microsoft.Extensions.Configuration;
+using static System.Net.WebRequestMethods;
+using Microsoft.Identity.Client;
 
 namespace AuthenticationService.Controllers
 {
@@ -37,6 +40,229 @@ namespace AuthenticationService.Controllers
         //{
         //    _producer = messageProducer;
         //}
+
+        private string CreateMailBody(string status, string OTP)
+        {
+            string bodyMsg = "";
+            if (status == "activate")
+            {
+                bodyMsg += "<h2>Welcome to FakeTaxi, a diverse and modern online booking vehicle system" +
+                    ", You have successfully registered an account, please use the following OTP string to activate your account:</h2>";
+            }
+            else if(status == "resetPass")
+            {
+                bodyMsg += "<h2>Welcome to FakeTaxi, a diverse and modern online booking vehicle system" +
+                    ", You have just required to reset your password, please note down the following OTP string and fill it in your app to update your new password:</h2>";
+            }
+            bodyMsg += $"<h3>{OTP}</h3>";
+
+            return bodyMsg;
+        }
+
+        [HttpPost]
+        public async Task<ResponseMsg> AddMailSender(EmailSender sender)
+        {
+            int res = await Repository.Authentication.AddMailSender(sender);
+            return new ResponseMsg
+            {
+                status = res > 0 ? true : false,
+                data = null,
+                message = res > 0? "Add mail sender success":"Add mail sender failed"
+            };
+        }
+
+        [HttpGet]
+        public async Task<ResponseMsg> ClearEmailSender()
+        {
+            int res = await Repository.Authentication.ClearEmailSender();
+            return new ResponseMsg
+            {
+                status = res > 0 ? true : false,
+                data = null,
+                message = res > 0 ? "Clear mail sender success" : "Clear mail sender failed"
+            };
+        }
+
+        [HttpPost]
+        public async Task<ResponseMsg> GetResetPasswordOTP(object emailObj)
+        {
+            JObject objTemp = JObject.Parse(emailObj.ToString());
+            string email = (string)objTemp["email"];
+            bool isEmailExisted = await Repository.Authentication.CheckEmailExisted(email);
+            if(isEmailExisted == false)
+            {
+                return new ResponseMsg
+                {
+                    status = false,
+                    data = null,
+                    message = "Get reset password OTP through email failed, email does not exist"
+                };
+            }
+            string OTPString = Helper.DoStuff.RandomString(1, 6);
+            await Repository.Authentication.SaveOTPStr(2, OTPString, email);
+            string mailBody = CreateMailBody("resetPass", OTPString);
+            EmailMessage msg = new EmailMessage
+            {
+                EmailTo = email,
+                Subject = "Reset password mail",
+                Content = mailBody
+            };
+            EmailSender sender = await Repository.Authentication.GetMailSender();
+            string sendMailResult = Helper.DoStuff.SendEmails(sender, msg);
+            if (sendMailResult == "Send mail success")
+            {
+                Repository.Authentication.IncreaseMailSent(sender.usr);
+                return new ResponseMsg
+                {
+                    status = true,
+                    data = null,
+                    message = "Send email success, please check OTP string in your email and use it to activate your account"
+                };
+            }
+            return new ResponseMsg
+            {
+                status = true,
+                data = null,
+                message = "Register success but send activation mail failed"
+            };
+        }
+
+        [HttpPost]
+        public async Task<ResponseMsg> ResetPassword(object resetPassObj)
+        {
+            JObject objTemp = JObject.Parse(resetPassObj.ToString());
+            string email = (string)objTemp["email"];
+            string OTP = (string)objTemp["OTP"];
+            string newPassword = (string)objTemp["newPassword"];
+            bool isEmailExisted = await Repository.Authentication.CheckEmailExisted(email);
+            if(isEmailExisted)
+            {
+                int resetResult = await Repository.Authentication.ResetPassword(newPassword, email, OTP);
+                if(resetResult == -2)
+                {
+                    return new ResponseMsg
+                    {
+                        status = false,
+                        data = null,
+                        message = "Reset password failed, your OTP is invalid"
+                    };
+                }
+                return new ResponseMsg
+                {
+                    status = true,
+                    data = null,
+                    message = "Reset password success, please login"
+                };
+            }
+            return new ResponseMsg
+            {
+                status = false,
+                data = null,
+                message = "Reset password failed, your email does not exist"
+            };
+        }
+
+        private async Task<bool> SendMailActivateAccount(string email, string OTPstr)
+        {
+            string mailBody = CreateMailBody("activate", OTPstr);
+            EmailMessage msg = new EmailMessage
+            {
+                EmailTo = email,
+                Subject = "Activate account mail",
+                Content = mailBody
+            };
+            EmailSender sender = await Repository.Authentication.GetMailSender();
+            string sendMailResult = Helper.DoStuff.SendEmails(sender, msg);
+            if (sendMailResult == "Send mail success")
+            {
+                await Repository.Authentication.IncreaseMailSent(sender.usr);
+                return true;
+            }
+            return false;
+        }
+
+        [HttpPost]
+        public async Task<ResponseMsg> SendEmailActivateAccount(object objAccount)
+        {
+            JObject objTemp = JObject.Parse(objAccount.ToString());
+            Guid accountId = Guid.Parse((string)objTemp["accountId"]);
+            string email = (string)objTemp["email"];
+            bool isEmailExistedInAccount = await Repository.Authentication.CheckEmailExistedInAccount(accountId, email);
+            if(isEmailExistedInAccount == false)
+            {
+                return new ResponseMsg
+                {
+                    status = false,
+                    data = null,
+                    message = "The email you provided does not existed in the accountId you provided, or the accountId you provided does not exist"
+                };
+            }
+            int isAccountNotValidated = await Repository.Authentication.CheckAccountNotValidated(accountId);
+            if (isAccountNotValidated == -3)
+            {
+                return new ResponseMsg
+                {
+                    status = false,
+                    data = null,
+                    message = "Send mail activate account failed, your account is already activated"
+                };
+            }
+            if (isAccountNotValidated == 1)
+            {
+                string OTPString = Helper.DoStuff.RandomString(1, 6);
+                await Repository.Authentication.SaveOTPStr(1, OTPString, email);
+                bool sendMailResult = await SendMailActivateAccount(email, OTPString);
+                if (sendMailResult == true)
+                {
+                    return new ResponseMsg
+                    {
+                        status = true,
+                        data = null,
+                        message = "Send mail activate account success, please check your email to get the OTP"
+                    };
+                }
+            }
+            return new ResponseMsg
+            {
+                status = false,
+                data = null,
+                message = "Send mail activate account failed, please try again"
+            };
+        }
+
+        [HttpPost]
+        public async Task<ResponseMsg> ActivateAccount(object activateObj)
+        {
+            JObject objTemp = JObject.Parse(activateObj.ToString());
+            string email = (string)objTemp["email"];
+            string OTP = (string)objTemp["OTP"];
+            bool isEmailExisted = await Repository.Authentication.CheckEmailExisted(email);
+            if (isEmailExisted)
+            {
+                int validateResult = await Repository.Authentication.ValidateEmail(OTP, email);
+                if(validateResult <= 0)
+                {
+                    return new ResponseMsg
+                    {
+                        status = false,
+                        data = null,
+                        message = "Exec validate account failed, OTP is invalid"
+                    };
+                }
+                return new ResponseMsg
+                {
+                    status = true,
+                    data = null,
+                    message = "Validate account success, now you can use our services"
+                };
+            }
+            return new ResponseMsg
+            {
+                status = false,
+                data = null,
+                message = "Reset password failed, your email does not exist"
+            };
+        }
 
         [HttpGet]
         public async Task<string> GetRandomString()
@@ -80,6 +306,7 @@ namespace AuthenticationService.Controllers
                     status = true,
                     data = new {
                         accountId = info.AccountId,
+                        isEmailValidated = info.IsValidated,
                         accessToken = token.AccessToken,
                         refreshToken = token.RefreshToken
                     },

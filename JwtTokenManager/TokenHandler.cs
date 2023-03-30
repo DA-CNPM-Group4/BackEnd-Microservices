@@ -29,7 +29,7 @@ namespace JwtTokenManager
 
         public string CreateRefreshToken()
         {
-            var RefreshToken = Helper.DoStuff.RandomString(32);
+            var RefreshToken = Helper.DoStuff.RandomString(2, 32);
             return RefreshToken;
         }
 

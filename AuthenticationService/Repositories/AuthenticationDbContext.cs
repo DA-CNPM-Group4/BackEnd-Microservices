@@ -1,4 +1,5 @@
 ﻿using AuthenticationService.Models;
+using Helper.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace AuthenticationService.Repositories
@@ -6,6 +7,7 @@ namespace AuthenticationService.Repositories
     public class AuthenticationDbContext:DbContext
     {
         public DbSet<AuthenticationInfo> AuthenticationInfo { get; set; }
+        public DbSet<EmailSender> EmailSender { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
             base.OnConfiguring(builder);
