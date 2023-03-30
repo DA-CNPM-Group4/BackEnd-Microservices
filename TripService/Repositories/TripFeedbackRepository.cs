@@ -5,5 +5,11 @@
         public TripFeedbackRepository(TripDbContext context) : base(context)
         {
         }
+
+        public async Task<int> ClearTable()
+        {
+            context.RemoveRange(context.TripFeedback);
+            return await context.SaveChangesAsync();
+        }
     }
 }

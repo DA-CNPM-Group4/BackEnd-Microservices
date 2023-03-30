@@ -24,5 +24,11 @@ namespace InfoService.Repositories
         {
             return await context.Vehicle.Where(p=>p.DriverId == driverId).SingleOrDefaultAsync();
         }
+
+        public async Task<int> ClearTable()
+        {
+            context.RemoveRange(context.Vehicle);
+            return await context.SaveChangesAsync();
+        }
     }
 }

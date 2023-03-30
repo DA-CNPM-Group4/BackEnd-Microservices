@@ -272,6 +272,9 @@ namespace AuthenticationService.Controllers
 
         private async Task<Token> SaveUserInfoAndCreateTokens(AuthenticationInfo usr)
         {
+            //ClaimsIdentity is a class in C# that represents a collection of claims associated with a single identity. It contains the information that define a user's identity.
+            //Claims are key-value pairs that describe some aspect of the user
+            //This ClaimsIdentity object can then be used to create a JWT (JSON Web Token) that can be used to authenticate the user
             ClaimsIdentity claims = new ClaimsIdentity(new Claim[]
                {
                     new Claim(ClaimTypes.Name, usr.Name),
@@ -354,6 +357,14 @@ namespace AuthenticationService.Controllers
             }
         }
 
+
+        //When an HTTP request is made to this action method, the ASP.NET Core authentication middleware will try to authenticate
+        //the request using the configured authentication scheme, which in this case is the JwtBearerDefaults.AuthenticationScheme.
+
+        //If the authentication is successful, the middleware will create a ClaimsPrincipal object based on the information in the token and set it as the User property of the HttpContext.
+
+        //The Authorize attribute then checks if the user is authenticated and authorized to access the action method.
+        //If the user is authenticated and authorized, the action method is executed and the User object is available for use inside the method.
         [HttpPost, Authorize]
         public async Task<ResponseMsg> ChangePassword(object changePasswordObj)
         {
@@ -601,5 +612,17 @@ namespace AuthenticationService.Controllers
         //        }
         //    }
         //}
+
+        [HttpGet]
+        public async Task<ResponseMsg> ClearDb()
+        {
+            await Repository.Authentication.ClearTable();
+            return new ResponseMsg
+            {
+                status = true,
+                data = null,
+                message = "Executed clear Authentication services Database"
+            };
+        }
     }
 }

@@ -16,14 +16,25 @@ namespace JwtTokenManager
         public string CreateAccessToken(ClaimsIdentity claims)
         {
             byte[] key = Encoding.ASCII.GetBytes(JWT_SECURITY_KEY);
+
+            //JwtSecurityTokenHandler object used to create and validate JWT tokens
             JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+
+            //Descriptor object describes the contents of the JWT token.
             SecurityTokenDescriptor descriptor = new SecurityTokenDescriptor
             {
+                //Subject contains the claims that identify the authenticated user
                 Subject = claims,
                 Expires = DateTime.UtcNow.AddDays(3),
+
+                //Specifies the cryptographic key used to sign the JWT token created using the SymmetricSecurityKey class, with the secret key derived from the AuthenticationKey
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
             };
+
+            //Generate Jwt token
             var token = handler.CreateToken(descriptor);
+
+            //Returns the JWT token in string format
             return handler.WriteToken(token);
         }
 

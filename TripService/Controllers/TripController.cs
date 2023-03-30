@@ -119,5 +119,20 @@ namespace TripService.Controllers
                 message = "Get trips successfully"
             };
         }
+
+        [HttpGet]
+        public async Task<ResponseMsg> ClearDb()
+        {
+            await Repository.Trip.ClearTable();
+            await Repository.TripRequest.ClearTable();
+            await Repository.TripFeedBack.ClearTable();
+
+            return new ResponseMsg
+            {
+                status = true,
+                data = null,
+                message = "Executed clear all database of Trip service"
+            };
+        }
     }
 }

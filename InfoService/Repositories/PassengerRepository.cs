@@ -54,5 +54,11 @@ namespace InfoService.Repositories
             return await context.Passenger.AnyAsync(p => p.AccountId == p.AccountId);
         }
 
+        public async Task<int> ClearTable()
+        {
+            context.RemoveRange(context.Passenger);
+            return await context.SaveChangesAsync();
+        }
+
     }
 }

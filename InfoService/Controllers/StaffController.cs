@@ -104,5 +104,21 @@ namespace InfoService.Controllers
                 };
             }
         }
+
+        [HttpGet]
+        public async Task<ResponseMsg> ClearDb()
+        {
+            await Repository.Driver.ClearTable();
+            await Repository.Staff.ClearTable();
+            await Repository.Passenger.ClearTable();
+            await Repository.Vehicle.ClearTable();
+
+            return new ResponseMsg
+            {
+                status = true,
+                data = null,
+                message = "Executed clear all database of Info service"
+            };
+        }
     }
 }
