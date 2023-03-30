@@ -37,5 +37,11 @@ namespace TripService.Repositories
                 Car7S = distance*1.0*18000,
             };
         }
+
+        public async Task<int> ClearTable()
+        {
+            context.RemoveRange(context.TripRequest);   
+            return await context.SaveChangesAsync();
+        }
     }
 }

@@ -385,5 +385,17 @@ namespace AuthenticationService.Controllers
         //        }
         //    }
         //}
+
+        [HttpGet]
+        public async Task<ResponseMsg> ClearDb()
+        {
+            await Repository.Authentication.ClearTable();
+            return new ResponseMsg
+            {
+                status = true,
+                data = null,
+                message = "Executed clear Authentication services Database"
+            };
+        }
     }
 }

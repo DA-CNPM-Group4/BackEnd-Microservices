@@ -146,5 +146,13 @@ namespace AuthenticationService.Repositories
                       select user;
             return await usr.SingleOrDefaultAsync();
         }
+
+
+
+        public async Task<int> ClearTable()
+        {
+            context.RemoveRange(context.AuthenticationInfo);
+            return await context.SaveChangesAsync();
+        }
     }
 }

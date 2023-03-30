@@ -68,5 +68,11 @@ namespace InfoService.Repositories
             return -1;
         }
 
+        public async Task<int> ClearTable()
+        {
+            context.RemoveRange(context.Driver);
+            return await context.SaveChangesAsync();
+        }
+
     }
 }

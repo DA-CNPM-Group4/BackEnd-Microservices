@@ -135,5 +135,11 @@ namespace TripService.Repositories
         {
             return await context.Trip.ToListAsync();
         }
+
+        public async Task<int> ClearTable()
+        {
+            context.RemoveRange(context.Trip);
+            return await context.SaveChangesAsync();
+        }
     }
 }
