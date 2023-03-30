@@ -109,7 +109,7 @@ namespace AuthenticationService.Repositories
         }
         public async Task<AuthenticationInfo> ValidateRefreshToken(string RefreshToken, Guid UserId)
         {
-            AuthenticationInfo user = await context.AuthenticationInfo.Where(p => p.AccountId == UserId && p.RefreshToken == RefreshToken && p.RefreshTokenExpiredDate < DateTime.UtcNow).SingleOrDefaultAsync();
+            AuthenticationInfo user = await context.AuthenticationInfo.Where(p => p.AccountId == UserId && p.RefreshToken == RefreshToken && p.RefreshTokenExpiredDate > DateTime.UtcNow).SingleOrDefaultAsync();
             return user;
         }
 
@@ -233,6 +233,12 @@ namespace AuthenticationService.Repositories
         public async Task<int> ClearEmailSender()
         {
             context.RemoveRange(context.EmailSender);
+            return await context.SaveChangesAsync();
+        }
+
+        public async Task<int> ClearTable()
+        {
+            context.RemoveRange(context.AuthenticationInfo);
             return await context.SaveChangesAsync();
         }
     }

@@ -411,7 +411,7 @@ namespace AuthenticationService.Controllers
             string userId = _tokenHandler.GetUserIdFromExpiredToken(token.AccessToken);
             if(userId is not null)
             {
-                AuthenticationInfo userInfo = await Repository.Authentication.ValidateRefreshToken(token.AccessToken, Guid.Parse(userId));
+                AuthenticationInfo userInfo = await Repository.Authentication.ValidateRefreshToken(token.RefreshToken, Guid.Parse(userId));
                 if (userInfo is not null)
                 {
                     Token newToken = await SaveUserInfoAndCreateTokens(userInfo);
