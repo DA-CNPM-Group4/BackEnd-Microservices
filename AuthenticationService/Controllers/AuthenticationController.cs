@@ -331,13 +331,22 @@ namespace AuthenticationService.Controllers
         public async Task<ResponseMsg> Register(object registerInfo)
         {
             int registerResult = await Repository.Authentication.Register(registerInfo);
-            if (registerResult <= 0)
+            if (registerResult == -2)
             {
                 return new ResponseMsg
                 {
                     status = false,
                     data = null,
-                    message = "Register failed, try another email"
+                    message = "Register failed, email already existed"
+                };
+            }
+            else if (registerResult == -3)
+            {
+                return new ResponseMsg
+                {
+                    status = false,
+                    data = null,
+                    message = "Register failed, phone already existed"
                 };
             }
             else

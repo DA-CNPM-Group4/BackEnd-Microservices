@@ -3,6 +3,7 @@ using Helper.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
+using System.Numerics;
 
 namespace AuthenticationService.Repositories
 {
@@ -12,6 +13,7 @@ namespace AuthenticationService.Repositories
         {
         }
 
+        // -2: Email already exist, -3: Phone already exist
         public async Task<int> Register(object registerInfo)
         {
             JObject objTemp = JObject.Parse(registerInfo.ToString());
@@ -25,9 +27,15 @@ namespace AuthenticationService.Repositories
                 IsValidated = false
             };
             string registerPassword = (string)objTemp["password"];
-            if(await CheckEmailAndPhoneNumExisted(registerData.Email, registerData.Phone) == true)
+            bool existed1 = await context.AuthenticationInfo.AnyAsync(p => p.Email == registerData.Email);
+            if (existed1 == true)
             {
-                return 0;
+                return -2;
+            }
+            bool existed2 = await context.AuthenticationInfo.AnyAsync(p => p.Phone == registerData.Phone);
+            if (existed2 == true)
+            {
+                return -3;
             }
 
             registerData.Password = Helper.DoStuff.HashString(registerData.Email + "^@#%!@(!&^$" + registerPassword);
@@ -72,13 +80,6 @@ namespace AuthenticationService.Repositories
                 }
             }
             return 0;
-        }
-
-        public async Task<bool> CheckEmailAndPhoneNumExisted(string email, string phone)
-        {
-            bool existed1 = await context.AuthenticationInfo.AnyAsync(p => p.Email == email);
-            bool existed2 = await context.AuthenticationInfo.AnyAsync(p => p.Phone == phone);
-            return existed1 || existed2;
         }
 
         public async Task<bool> ValidatePassword(Guid userId, string password)
