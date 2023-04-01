@@ -35,7 +35,7 @@ namespace TripService.Controllers
             };
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<ResponseMsg> CancelRequest(string requestId)
         {
             int result = await Repository.TripRequest.CancelRequest(Guid.Parse(requestId));
@@ -44,17 +44,6 @@ namespace TripService.Controllers
                 status = result > 0 ? true : false,
                 data = null,
                 message = result > 0 ? "Cancel request successfully" : "Failed to cancel request",
-            };
-        }
-
-        [HttpGet]
-        public async Task<ResponseMsg> CancelTrip(string tripId)
-        {
-            return new ResponseMsg
-            {
-                status = true,
-                data = null,
-                message = null,
             };
         }
     }

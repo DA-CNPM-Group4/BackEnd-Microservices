@@ -27,7 +27,7 @@ namespace ChatService.Repositories
             //{
             //    builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
             //});
-            var connectionString = "";
+            var connectionString = "workstation id=chatdb4.mssql.somee.com;packet size=4096;user id=vuhiep123_SQLLogin_1;pwd=1hvdo3zw8c;data source=chatdb4.mssql.somee.com;persist security info=False;initial catalog=chatdb4;TrustServerCertificate=True";
             builder.UseSqlServer(connectionString);
         }
     }
