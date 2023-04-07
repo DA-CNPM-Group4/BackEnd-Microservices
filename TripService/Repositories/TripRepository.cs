@@ -25,6 +25,10 @@ namespace TripService.Repositories
             {
                 return Guid.Empty;
             }
+            if(tripRequest.RequestStatus == Catalouge.Request.Canceled)
+            {
+                return Guid.Empty;
+            }
             if(tripRequest.RequestStatus == Catalouge.Request.MovedToTrip)
             {
                 return Guid.Empty;

@@ -1,19 +1,21 @@
 ﻿using Helper.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TripService.DTOs;
 using TripService.Models;
 using static Helper.Catalouge;
 
 namespace TripService.Controllers
 {
-    [Route("api/Trip/[controller]/[action]")]
+    [Route("api/trip/[controller]/[action]")]
     [ApiController]
     public class TripController : BaseController
     {
         [HttpPost]
-        public async Task<ResponseMsg> AcceptRequest(string driverId, string requestId)
+        public async Task<ResponseMsg> AcceptRequest(AcceptTripDTO acceptTripDTO)
         {
-            Guid tripId = await Repository.Trip.AcceptTrip(driverId, requestId);
+            Guid tripId = await Repository.Trip.AcceptTrip(acceptTripDTO.DriverId, acceptTripDTO.RequestId);
             return new ResponseMsg
             {
                 status = tripId != Guid.Empty ? true : false,
@@ -35,7 +37,7 @@ namespace TripService.Controllers
             };
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<ResponseMsg> CancelTrip(string tripId)
         {
             int result = await Repository.Trip.CancelTrip(Guid.Parse(tripId));
@@ -97,7 +99,7 @@ namespace TripService.Controllers
             };
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<ResponseMsg> PickedPassenger(string tripId)
         {
             int result = await Repository.Trip.PickedPassenger(Guid.Parse(tripId));

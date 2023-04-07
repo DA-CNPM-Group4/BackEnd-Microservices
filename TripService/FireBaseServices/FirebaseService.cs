@@ -18,13 +18,6 @@ namespace TripService.FireBaseServices
                     AuthTokenAsyncFactory = () => Task.FromResult(firebaseSecret)
                 }
             );
-
-            //firebaseClient = FirebaseApp.Create(new AppOptions()
-            //{
-            //    Credential = GoogleCredential.FromFile("doancnpmnhom4-6bc5e-firebase-adminsdk-lt7t0-41cdf5fd48.json"),
-            //    ProjectId = "doancnpmnhom4-6bc5e",
-            //});
-            //Console.WriteLine("init successfully");
         }
 
         public async void AddNewRequest(TripRequest request)
