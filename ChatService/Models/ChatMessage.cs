@@ -1,9 +1,13 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ChatService.Models
 {
+    [Table("ChatMessage", Schema = "dbo")]
     public class ChatMessage
     {
+        [Key]
         public Guid TripId { get; set; }
         public string Message { get; set; }
         public string SenderName { get; set; }
