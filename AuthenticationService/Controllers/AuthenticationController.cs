@@ -46,16 +46,16 @@ namespace AuthenticationService.Controllers
             string bodyMsg = "";
             if (status == "activate")
             {
-                bodyMsg += "<h2>Welcome to FakeTaxi, a diverse and modern online booking vehicle system" +
+                bodyMsg += "<h2>Welcome to TaxiHub, a diverse and modern online booking vehicle system" +
                     ", You have successfully registered an account, please use the following OTP string to activate your account:</h2>";
             }
             else if(status == "resetPass")
             {
-                bodyMsg += "<h2>Welcome to FakeTaxi, a diverse and modern online booking vehicle system" +
+                bodyMsg += "<h2>Welcome to TaxiHub, a diverse and modern online booking vehicle system" +
                     ", You have just required to reset your password, please note down the following OTP string and fill it in your app to update your new password:</h2>";
             }
             bodyMsg += $"<h3>{OTP}</h3>";
-
+            bodyMsg += "<img src=\"https://drive.google.com/uc?export=download&id=1xkcnw7uAxlJGtoNoPp_4F197TMnNsogq\" height=\"500\">";
             return bodyMsg;
         }
 
@@ -123,7 +123,7 @@ namespace AuthenticationService.Controllers
             {
                 status = true,
                 data = null,
-                message = "Register success but send activation mail failed"
+                message = "Send mail reset password OTP failed"
             };
         }
 
@@ -260,7 +260,7 @@ namespace AuthenticationService.Controllers
             {
                 status = false,
                 data = null,
-                message = "Reset password failed, your email does not exist"
+                message = "Validate account failed, your email does not exist"
             };
         }
 
@@ -366,7 +366,6 @@ namespace AuthenticationService.Controllers
             }
         }
 
-
         //When an HTTP request is made to this action method, the ASP.NET Core authentication middleware will try to authenticate
         //the request using the configured authentication scheme, which in this case is the JwtBearerDefaults.AuthenticationScheme.
 
@@ -374,6 +373,8 @@ namespace AuthenticationService.Controllers
 
         //The Authorize attribute then checks if the user is authenticated and authorized to access the action method.
         //If the user is authenticated and authorized, the action method is executed and the User object is available for use inside the method.
+        //[Authorize(Roles = "Admin")]
+
         [HttpPost, Authorize]
         public async Task<ResponseMsg> ChangePassword(object changePasswordObj)
         {

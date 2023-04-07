@@ -37,8 +37,9 @@ namespace AuthenticationService.Repositories
             {
                 return -3;
             }
-
-            registerData.Password = Helper.DoStuff.HashString(registerData.Email + "^@#%!@(!&^$" + registerPassword);
+            string pwdSalt = Helper.DoStuff.RandomString(2, 16);
+            registerData.PasswordSalt = pwdSalt;
+            registerData.Password = Helper.DoStuff.HashString(registerData.Email + pwdSalt + registerPassword);
             await context.AddAsync(registerData);
             return await context.SaveChangesAsync();
         }
@@ -51,7 +52,7 @@ namespace AuthenticationService.Repositories
             string loginPassword = (string)objTemp["password"];
 
             var usr = from user in context.AuthenticationInfo
-                      where user.Email == loginEmail && user.Phone == loginPhone && (user.Password.SequenceEqual(Helper.DoStuff.HashString(loginEmail + "^@#%!@(!&^$" + loginPassword)))
+                      where user.Email == loginEmail && user.Phone == loginPhone && (user.Password.SequenceEqual(Helper.DoStuff.HashString(loginEmail + user.PasswordSalt + loginPassword)))
                       select user;
             return await usr.SingleOrDefaultAsync();
         }
@@ -85,7 +86,7 @@ namespace AuthenticationService.Repositories
         public async Task<bool> ValidatePassword(Guid userId, string password)
         {
             AuthenticationInfo usr = await context.AuthenticationInfo.FindAsync(userId);
-            if (usr.Password.SequenceEqual(Helper.DoStuff.HashString(usr.Email + "^@#%!@(!&^$" + password)))
+            if (usr.Password.SequenceEqual(Helper.DoStuff.HashString(usr.Email + usr.PasswordSalt + password)))
             {
                 return true;
             }
@@ -94,7 +95,8 @@ namespace AuthenticationService.Repositories
         public async Task<int> ChangePassword(Guid userId, string newPassword)
         {
             AuthenticationInfo usr = await context.AuthenticationInfo.FindAsync(userId);
-            usr.Password = Helper.DoStuff.HashString(usr.Email + "^@#%!@(!&^$" + newPassword);
+            usr.PasswordSalt = Helper.DoStuff.RandomString(2, 16);
+            usr.Password = Helper.DoStuff.HashString(usr.Email + usr.PasswordSalt + newPassword);
             return await context.SaveChangesAsync();
         }
 
@@ -116,12 +118,14 @@ namespace AuthenticationService.Repositories
 
         public async Task<int> RegisterWithGoogleInfo(string email, string name, string role)
         {
+            string pwdSalt = Helper.DoStuff.RandomString(2, 16);
             AuthenticationInfo usr = new AuthenticationInfo
             {
                 Email = email,
                 Role = role,
+                PasswordSalt = pwdSalt,
                 Name = name,
-                Password = Helper.DoStuff.HashString(email + "^@#%!@(!&^$" + "gggggggg"),
+                Password = Helper.DoStuff.HashString(email + pwdSalt + "gggggggg"),
                 IsValidated = true
             };
             await context.AuthenticationInfo.AddAsync(usr);
@@ -222,10 +226,12 @@ namespace AuthenticationService.Repositories
         public async Task<int> ResetPassword(string newPassword, string email, string OTP)
         {
             AuthenticationInfo user = await context.AuthenticationInfo.Where(p => p.Email == email).SingleOrDefaultAsync();
+            string pwdSalt = Helper.DoStuff.RandomString(2, 16);
             if(user.ResetPasswordString == OTP)
             {
+                user.PasswordSalt = pwdSalt;
                 user.ResetPasswordString = "";
-                user.Password = Helper.DoStuff.HashString(email + "^@#%!@(!&^$" + newPassword);
+                user.Password = Helper.DoStuff.HashString(email + pwdSalt + newPassword);
                 return await context.SaveChangesAsync();
             }
             return -2;

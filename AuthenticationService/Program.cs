@@ -27,6 +27,7 @@ app.UseCors(builder => builder
     .AllowAnyHeader()
     .WithExposedHeaders("Content-Disposition")
 );
+app.UseMiddleware<ApiKeyMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 

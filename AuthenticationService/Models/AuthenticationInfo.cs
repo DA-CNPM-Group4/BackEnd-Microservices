@@ -19,6 +19,7 @@ namespace AuthenticationService.Models
         public string? ResetPasswordString { get; set; }    
         public bool? IsValidated { get; set; }
         public string? RefreshToken { get; set; }
+        public string? PasswordSalt { get; set; }
         public DateTime? RefreshTokenExpiredDate { get; set; }
     }
 }

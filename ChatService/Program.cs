@@ -1,4 +1,7 @@
 using JwtTokenManager;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddCors();
 builder.Services.AddJwtAuthExtension();
+
+
 //builder.Services.AddCors(p => p.AddPolicy("corspolicy", build =>
 //{
 //    build.SetIsOriginAllowed(isOriginAllowed: _ => true).AllowAnyHeader().AllowAnyMethod().AllowCredentials();
@@ -22,7 +27,7 @@ app.UseCors(builder => builder
     .AllowAnyHeader()
     .WithExposedHeaders("Content-Disposition")
 );
-
+app.UseMiddleware<ApiKeyMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 
