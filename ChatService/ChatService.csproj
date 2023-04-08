@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-	  <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
+	  <PackageReference Include="Google.Cloud.Firestore" Version="3.2.0" />
 	  <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.15" />
 	  <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.0" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.3">
@@ -29,7 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ApiKeyManager\ApiKeyManager.csproj" />
     <ProjectReference Include="..\Helper\Helper.csproj" />
     <ProjectReference Include="..\JwtTokenManager\JwtTokenManager.csproj" />
   </ItemGroup>

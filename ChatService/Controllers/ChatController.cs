@@ -1,4 +1,5 @@
-﻿using Helper.Models;
+﻿using ChatService.DTOs;
+using Helper.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,6 +9,19 @@ namespace ChatService.Controllers
     [ApiController]
     public class ChatController : BaseController
     {
+        [HttpPost]
+        public async Task<ResponseMsg> GetChats(GetChatsDTO getChatsDTO)
+        {
+            await Repository.Chat.GetChat(getChatsDTO.TripId);
+            return new ResponseMsg
+            {
+                status = true,
+                data = null,
+                message = "Get chat successfully"
+            };
+
+        }
+
         [HttpGet]
         public async Task<ResponseMsg> ClearDb()
         {
