@@ -8,6 +8,8 @@ namespace ChatService.Models
     public class ChatMessage
     {
         [Key]
+        public Guid ChatMessageId { get; set; }
+
         public Guid TripId { get; set; }
         public string Message { get; set; }
         public string SenderName { get; set; }
