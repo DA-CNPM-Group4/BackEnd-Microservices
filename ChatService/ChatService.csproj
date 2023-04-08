@@ -29,8 +29,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ApiKeyManager\ApiKeyManager.csproj" />
     <ProjectReference Include="..\Helper\Helper.csproj" />
     <ProjectReference Include="..\JwtTokenManager\JwtTokenManager.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="doancnpmnhom4-6bc5e-firebase-adminsdk-lt7t0-a6d28fa879.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

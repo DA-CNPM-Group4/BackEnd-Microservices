@@ -4,6 +4,7 @@ using RabbitMQ.Client;
 using TripService.FireBaseServices;
 using TripService.Models;
 using TripService.RabbitMQServices;
+using static Helper.Catalouge;
 
 namespace TripService.Repositories
 {
@@ -11,10 +12,12 @@ namespace TripService.Repositories
     {
         private readonly IConfiguration _configuration;
         private readonly FirebaseService _fireBaseServices;
+        private readonly RabbitmqProducer _rabbitmqProducer;
         //private readonly RabbitmqProducer _messageProducer;
         public TripRepository(TripDbContext context) : base(context)
         {
             _fireBaseServices = new FirebaseService();
+            _rabbitmqProducer = new RabbitmqProducer();
             //_messageProducer = new RabbitmqProducer(_configuration);
         }
 
@@ -34,7 +37,7 @@ namespace TripService.Repositories
                 return Guid.Empty;
             }
             tripRequest.RequestStatus = Catalouge.Request.MovedToTrip;
-            Trip trip = new()
+            Models.Trip trip = new()
             {
                 TripId = Guid.NewGuid(),
                 DriverId = Guid.Parse(driverId),
@@ -64,7 +67,7 @@ namespace TripService.Repositories
 
         public async Task<int> PickedPassenger(Guid tripId)
         {
-            Trip trip = await context.Trip.FindAsync(tripId);
+            Models.Trip trip = await context.Trip.FindAsync(tripId);
             if (trip != null)
             {
                 trip.TripStatus = Catalouge.Trip.OnTheWay;
@@ -74,35 +77,35 @@ namespace TripService.Repositories
             return 0;
         }
 
-        public async Task<Trip> GetTripForPassenger(Guid passengerId, Guid requestId)
+        public async Task<Models.Trip> GetTripForPassenger(Guid passengerId, Guid requestId)
         {
-            Trip trip = await context.Trip.FirstOrDefaultAsync(t => t.PassengerId == passengerId && t.RequestId == requestId);
+            Models.Trip trip = await context.Trip.FirstOrDefaultAsync(t => t.PassengerId == passengerId && t.RequestId == requestId);
             return trip;
         }
 
-        public async Task<List<Trip>> GetListTripsByDriver(Guid driverId)
+        public async Task<List<Models.Trip>> GetListTripsByDriver(Guid driverId)
         {
-            List<Trip> trips = await context.Trip.Where(t => t.DriverId == driverId).ToListAsync(); 
+            List<Models.Trip> trips = await context.Trip.Where(t => t.DriverId == driverId).ToListAsync(); 
             return trips;
         }
 
-        public async Task<List<Trip>> GetListTripsByPassenger(Guid passengerId)
+        public async Task<List<Models.Trip>> GetListTripsByPassenger(Guid passengerId)
         {
-            List<Trip> trips = await context.Trip.Where(t => t.PassengerId == passengerId).ToListAsync();
+            List<Models.Trip> trips = await context.Trip.Where(t => t.PassengerId == passengerId).ToListAsync();
             return trips;
         }
 
         public async Task<int> CancelTrip(Guid tripId)
         {
-            Trip trip = await context.Trip.FindAsync(tripId);
+            Models.Trip trip = await context.Trip.FindAsync(tripId);
             trip.TripStatus = Catalouge.Trip.CanceledByDriver;
             _fireBaseServices.RemoveTrip(tripId);
             return await context.SaveChangesAsync();
         }
 
-        public async Task<Trip> GetTrip(Guid tripId)
+        public async Task<Models.Trip> GetTrip(Guid tripId)
         {
-            Trip trip = await context.Trip.FindAsync(tripId);
+            Models.Trip trip = await context.Trip.FindAsync(tripId);
             //_messageProducer.SendMessage("info", new
             //{
             //    Status = true,
@@ -129,13 +132,28 @@ namespace TripService.Repositories
 
         public async Task<int> CompleteTrip(Guid tripId)
         {
-            Trip trip = await context.Trip.FindAsync(tripId);
+            Models.Trip trip = await context.Trip.FindAsync(tripId);
+            if(trip == null || trip.TripStatus == Catalouge.Trip.Done)
+            {
+                return 0;
+            }
             trip.TripStatus = Catalouge.Trip.Done;
+            trip.CompleteTime = DateTime.Now;
             _fireBaseServices.RemoveTrip(tripId);
-            return await context.SaveChangesAsync();
+            _rabbitmqProducer.SendMessage("chat", new
+            {
+                Status = true,
+                Message = "SaveChat",
+                Data = new
+                {
+                    TripId = tripId.ToString(),
+                },
+            });
+            return 1;
+            //return await context.SaveChangesAsync();
         }
 
-        public async Task<List<Trip>> GetTrips()
+        public async Task<List<Models.Trip>> GetTrips()
         {
             return await context.Trip.ToListAsync();
         }

@@ -63,7 +63,7 @@ namespace InfoService.Repositories
             //{
             //    builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
             //});
-            var connectionString = "workstation id=infodb7.mssql.somee.com;packet size=4096;user id=vuhiep_SQLLogin_1;pwd=vbt13dnvso;data source=infodb7.mssql.somee.com;persist security info=False;initial catalog=infodb7;TrustServerCertificate=True";
+            var connectionString = "";
             builder.UseSqlServer(connectionString);
         }
     }

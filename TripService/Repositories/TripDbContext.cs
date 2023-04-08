@@ -27,7 +27,7 @@ namespace TripService.Repositories
             //    builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
             //});
 
-            var connectionString = "workstation id=tripdb5.mssql.somee.com;packet size=4096;user id=VuHiep07011_SQLLogin_1;pwd=o7r2cji31v;data source=tripdb5.mssql.somee.com;persist security info=False;initial catalog=tripdb5;TrustServerCertificate=True";
+            var connectionString = "";
             builder.UseSqlServer(connectionString);
         }
     }

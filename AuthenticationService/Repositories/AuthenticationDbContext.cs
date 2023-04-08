@@ -24,7 +24,7 @@ namespace AuthenticationService.Repositories
             //    builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
             //});
 
-            var connectionString = "workstation id=authenticationdb6.mssql.somee.com;packet size=4096;user id=VuHiep0701_SQLLogin_1;pwd=xr93od43u4;data source=authenticationdb6.mssql.somee.com;persist security info=False;initial catalog=authenticationdb6;TrustServerCertificate=True";
+            var connectionString = "";
             builder.UseSqlServer(connectionString);
         }
     }

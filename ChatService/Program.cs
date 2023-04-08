@@ -1,6 +1,8 @@
+using ChatService.RabbitMQServices;
 using JwtTokenManager;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using RabbitMQ.Client;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +14,19 @@ builder.Services.AddCors();
 builder.Services.AddJwtAuthExtension();
 
 
+ConnectionFactory connectionFactory = new ConnectionFactory
+{
+    Uri = new Uri("amqps://gtyepqer:MFoGZBk-zqtRAf8fZoKPYIdBIcQTOp8T@fly.rmq.cloudamqp.com/gtyepqer")
+};
+var connection = connectionFactory.CreateConnection();
+var channel = connection.CreateModel();
+
+// accept only one unack-ed message at a time
+// uint prefetchSize, ushort prefetchCount, bool global
+channel.BasicQos(0, 1, false);
+RabbitmqConsumer messageReceiver = new RabbitmqConsumer(channel);
+channel.QueueDeclare("chat" , exclusive: false);
+channel.BasicConsume("chat", false, messageReceiver);
 //builder.Services.AddCors(p => p.AddPolicy("corspolicy", build =>
 //{
 //    build.SetIsOriginAllowed(isOriginAllowed: _ => true).AllowAnyHeader().AllowAnyMethod().AllowCredentials();

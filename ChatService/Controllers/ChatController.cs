@@ -12,11 +12,11 @@ namespace ChatService.Controllers
         [HttpPost]
         public async Task<ResponseMsg> GetChats(GetChatsDTO getChatsDTO)
         {
-            await Repository.Chat.GetChat(getChatsDTO.TripId);
+            ChatResponseDTO chatResponseDTO = await Repository.Chat.GetChat(getChatsDTO.TripId);
             return new ResponseMsg
             {
                 status = true,
-                data = null,
+                data = chatResponseDTO,
                 message = "Get chat successfully"
             };
 

@@ -12,11 +12,40 @@ namespace ChatService.Repositories
             _storeService = new FireStoreService();
         }
 
+        public async Task<int> StoreChat(string tripId)
+        {
+            ChatResponseDTO chatResponseDTO = await GetChatFromFireStore(tripId);
+            Chat chat = new Chat()
+            {
+                TripId = Guid.Parse(tripId),
+                DriverId = chatResponseDTO.DriverId,
+                PassengerId = chatResponseDTO.PassengerId,
+                TripCreatedTime = chatResponseDTO.TripCreatedTime,
+            };
+            List<ChatMessage> chatMessages = new List<ChatMessage>();
+            chatMessages = chatResponseDTO.Messages;
+            await context.Chat.AddAsync(chat);
+            foreach(var message in chatMessages)
+            {
+                ChatMessage chatMessage = new ChatMessage()
+                {
+                    ChatMessageId = Guid.NewGuid(),
+                    Message = message.Message,
+                    SenderId = message.SenderId,
+                    SenderName = message.SenderName,
+                    SendTime = message.SendTime,
+                    TripId = Guid.Parse(tripId),
+                };
+                await context.ChatMessage.AddAsync(chatMessage);
+            }
+
+            return await context.SaveChangesAsync();
+        }
+
         public async Task<ChatResponseDTO> GetChat(string tripId)
         {
-            
-            Chat chat = await context.Chat.FindAsync(tripId);
-            List<ChatMessage> messages = await context.ChatMessage.Where(m => m.TripId == Guid.Parse(tripId)).ToListAsync();
+            Chat chat = await context.Chat.FindAsync(Guid.Parse(tripId));
+            List<ChatMessage> messages = await context.ChatMessage.Where(m => m.TripId == Guid.Parse(tripId) ).ToListAsync();
             ChatResponseDTO chatResponseDTO = new ChatResponseDTO()
             {
                 DriverId = chat.DriverId,
@@ -26,6 +55,14 @@ namespace ChatService.Repositories
                 TripCreatedTime = chat.TripCreatedTime
             };
             return chatResponseDTO;
+        }
+
+        public async Task<ChatResponseDTO> GetChatFromFireStore(string tripId)
+        {
+            ChatResponseDTO chatResponse = await _storeService.GetTrip(tripId);
+            Console.WriteLine(chatResponse);
+            
+            return chatResponse;
         }
 
         public async Task<int> ClearTable()

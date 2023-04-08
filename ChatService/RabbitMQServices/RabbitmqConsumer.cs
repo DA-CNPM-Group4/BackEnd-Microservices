@@ -1,25 +1,24 @@
-﻿using Newtonsoft.Json.Linq;
+﻿
+using ChatService.Repositories;
+using Newtonsoft.Json.Linq;
 using RabbitMQ.Client;
 using System.Text;
 using System.Threading.Channels;
-using TripService.Repositories;
 
-namespace TripService.RabbitMQServices
+namespace ChatService.RabbitMQServices
 {
-    public class RabbitmqConsumer : DefaultBasicConsumer
+    public class RabbitmqConsumer: DefaultBasicConsumer
     {
         private readonly IModel _channel;
-        private readonly ServiceRepository _serviceRepository;
-
         private readonly IConfiguration _configuration;
+        private readonly ServiceRepository _repository;
         public RabbitmqConsumer(IModel channel)
         {
             _channel = channel;
-            _serviceRepository = new ServiceRepository();
-         
+            _repository = new ServiceRepository();
         }
 
-        public override void HandleBasicDeliver(string consumerTag, ulong deliveryTag, bool redelivered, string exchange, string routingKey, IBasicProperties properties, ReadOnlyMemory<byte> body)
+        public async override void HandleBasicDeliver(string consumerTag, ulong deliveryTag, bool redelivered, string exchange, string routingKey, IBasicProperties properties, ReadOnlyMemory<byte> body)
         {
             Console.WriteLine($"Consuming Message");
             Console.WriteLine(string.Concat("Message received from the exchange ", exchange));
@@ -29,9 +28,16 @@ namespace TripService.RabbitMQServices
             Console.WriteLine(string.Concat("Message: ", JObject.Parse(Encoding.UTF8.GetString(body.Span))));
             JObject message = JObject.Parse(Encoding.UTF8.GetString(body.Span));
             _channel.BasicAck(deliveryTag, false);
-            Console.WriteLine(message);
+            string request = (string)message["Message"];
+            if (request == "SaveChat")
+            {
+                JObject data = (JObject)message["Data"];
+                string tripId = data["TripId"].ToString();
+                await _repository.Chat.StoreChat(tripId);
+                Console.WriteLine("Store chat successfully");
+            }
         }
     }
 
-
+    
 }
