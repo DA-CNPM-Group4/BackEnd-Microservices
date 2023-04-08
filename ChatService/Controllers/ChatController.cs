@@ -13,11 +13,16 @@ namespace ChatService.Controllers
         public async Task<ResponseMsg> GetChats(GetChatsDTO getChatsDTO)
         {
             ChatResponseDTO chatResponseDTO = await Repository.Chat.GetChat(getChatsDTO.TripId);
+            bool result = true;
+            if (chatResponseDTO.PassengerId == Guid.Empty || chatResponseDTO.DriverId == Guid.Empty || chatResponseDTO.TripId == Guid.Empty)
+            {
+                result = false;
+            }
             return new ResponseMsg
             {
-                status = true,
+                status = result ? true : false,
                 data = chatResponseDTO,
-                message = "Get chat successfully"
+                message = result ? "Get chat successfully" : "Failed to get chats"
             };
 
         }

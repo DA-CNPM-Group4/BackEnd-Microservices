@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using TripService.DTOs;
 using TripService.Models;
 using static Helper.Catalouge;
@@ -119,6 +120,24 @@ namespace TripService.Controllers
                 status = true,
                 data = await Repository.Trip.GetTrips(),
                 message = "Get trips successfully"
+            };
+        }
+
+
+        [HttpGet]
+        public async Task<ResponseMsg> GetIncome([FromBody]object getIncome)
+        {
+            JObject objTemp = JObject.Parse(getIncome.ToString());
+            string driverId = (string)objTemp["driverId"];
+            string from = (string)objTemp["from"];
+            string to = (string)objTemp["to"];
+
+            int income = await Repository.Trip.GetIncome(Guid.Parse(driverId), from, to);
+            return new ResponseMsg
+            {
+                status = true,
+                data = income,
+                message = "Get income successfully"
             };
         }
 

@@ -130,6 +130,37 @@ namespace TripService.Repositories
             return trip;
         }
 
+        public async Task<int> GetIncome(Guid driverId, string from, string to)
+        {
+            int totalPrice = 0;
+            DateTime fromTime = DateTime.Parse(from);
+            DateTime toTime = DateTime.Parse(to);
+            if(fromTime == toTime)
+            {
+                DateTime startDateTime = DateTime.Today; //Today at 00:00:00
+                DateTime endDateTime = DateTime.Today.AddDays(1).AddTicks(-1); //Today at 23:59:59
+                List<Models.Trip> driverTodayTrips = context.Trip.Where(t => t.DriverId == driverId && t.CompleteTime >= startDateTime && t.CompleteTime <= endDateTime && t.TripStatus == Catalouge.Trip.Done).ToList();
+                foreach (var trip in driverTodayTrips)
+                {
+                    if (trip.Price != null)
+                    {
+                        totalPrice += trip.Price.Value;
+                    }
+                }
+                return totalPrice;
+            }
+            List<Models.Trip> driverTrips = context.Trip.Where(t => t.DriverId == driverId && t.CompleteTime >= fromTime && t.CompleteTime <= toTime &&  t.TripStatus == Catalouge.Trip.Done).ToList();
+            foreach(var trip in driverTrips)
+            {
+                if (trip.Price != null)
+                {
+                    totalPrice += trip.Price.Value;
+                }
+            }
+
+            return totalPrice;
+        }
+
         public async Task<int> CompleteTrip(Guid tripId)
         {
             Models.Trip trip = await context.Trip.FindAsync(tripId);
@@ -149,8 +180,7 @@ namespace TripService.Repositories
                     TripId = tripId.ToString(),
                 },
             });
-            return 1;
-            //return await context.SaveChangesAsync();
+            return await context.SaveChangesAsync();
         }
 
         public async Task<List<Models.Trip>> GetTrips()

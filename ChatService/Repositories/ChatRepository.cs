@@ -15,6 +15,10 @@ namespace ChatService.Repositories
         public async Task<int> StoreChat(string tripId)
         {
             ChatResponseDTO chatResponseDTO = await GetChatFromFireStore(tripId);
+            if(chatResponseDTO.Messages == null)
+            {
+                return 0;
+            }
             Chat chat = new Chat()
             {
                 TripId = Guid.Parse(tripId),
@@ -45,6 +49,12 @@ namespace ChatService.Repositories
         public async Task<ChatResponseDTO> GetChat(string tripId)
         {
             Chat chat = await context.Chat.FindAsync(Guid.Parse(tripId));
+            if (chat == null)
+            {
+                ChatResponseDTO chatResponseDTO1 = new ChatResponseDTO();
+                chatResponseDTO1.Messages = new List<ChatMessage>();
+                return chatResponseDTO1;
+            }
             List<ChatMessage> messages = await context.ChatMessage.Where(m => m.TripId == Guid.Parse(tripId) ).ToListAsync();
             ChatResponseDTO chatResponseDTO = new ChatResponseDTO()
             {
