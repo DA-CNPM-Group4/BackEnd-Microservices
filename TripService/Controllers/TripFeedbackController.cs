@@ -1,6 +1,7 @@
 ﻿using Helper.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using TripService.DTOs;
 using TripService.Models;
 
@@ -24,8 +25,10 @@ namespace TripService.Controllers
 
             
         [HttpGet]
-        public async Task<ResponseMsg> GetTripFeedBack(string tripId)
+        public async Task<ResponseMsg> GetTripFeedBack([FromBody]object tripIdJson)
         {
+            JObject objTemp = JObject.Parse(tripIdJson.ToString());
+            string tripId = (string)objTemp["tripId"];
             TripFeedback tripFeedback = await Repository.TripFeedBack.GetTripFeedback(Guid.Parse(tripId));
             return new ResponseMsg
             {

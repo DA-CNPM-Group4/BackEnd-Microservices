@@ -1,10 +1,14 @@
 //using TripService.RabbitMQServices;
 using JwtTokenManager;
+using TripService;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+
+builder.Services.AddGraphQLServer().AddQueryType<Query>();
+builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddCors();
 builder.Services.AddJwtAuthExtension();
@@ -24,9 +28,14 @@ app.UseCors(builder => builder
     .AllowAnyHeader()
     .WithExposedHeaders("Content-Disposition")
 );
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+};
 app.UseMiddleware<ApiKeyMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-
+app.MapGraphQL();
 app.Run();

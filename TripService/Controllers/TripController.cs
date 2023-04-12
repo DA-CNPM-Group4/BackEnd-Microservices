@@ -26,8 +26,10 @@ namespace TripService.Controllers
         }
 
         [HttpPost]
-        public async Task<ResponseMsg> FinishTrip(string tripId)
+        public async Task<ResponseMsg> FinishTrip([FromBody] object tripIdJson)
         {
+            JObject objTemp = JObject.Parse(tripIdJson.ToString());
+            string tripId = (string)objTemp["tripId"];
             int result = await Repository.Trip.CompleteTrip(Guid.Parse(tripId));
 
             return new ResponseMsg
@@ -39,8 +41,10 @@ namespace TripService.Controllers
         }
 
         [HttpPost]
-        public async Task<ResponseMsg> CancelTrip(string tripId)
+        public async Task<ResponseMsg> CancelTrip([FromBody] object tripIdJson)
         {
+            JObject objTemp = JObject.Parse(tripIdJson.ToString());
+            string tripId = (string)objTemp["tripId"];
             int result = await Repository.Trip.CancelTrip(Guid.Parse(tripId));
             return new ResponseMsg {
                 status = result > 0 ? true : false,
@@ -51,8 +55,10 @@ namespace TripService.Controllers
         }
 
         [HttpGet]
-        public async Task<ResponseMsg> GetPassengerTrips(string passengerId)
+        public async Task<ResponseMsg> GetPassengerTrips([FromBody] object passengerIdJson)
         {
+            JObject objTemp = JObject.Parse(passengerIdJson.ToString());
+            string passengerId = (string)objTemp["passengerId"];
             List<Models.Trip> trips = await Repository.Trip.GetListTripsByPassenger(Guid.Parse(passengerId));
             return new ResponseMsg
             {
@@ -63,8 +69,10 @@ namespace TripService.Controllers
         }
 
         [HttpGet]
-        public async Task<ResponseMsg> GetDriverTrips(string driverId)
+        public async Task<ResponseMsg> GetDriverTrips([FromBody] object driverIdJson)
         {
+            JObject objTemp = JObject.Parse(driverIdJson.ToString());
+            string driverId = (string)objTemp["driverId"];
             List<Models.Trip> trips = await Repository.Trip.GetListTripsByDriver(Guid.Parse(driverId));
             return new ResponseMsg
             {
@@ -75,8 +83,10 @@ namespace TripService.Controllers
         }
 
         [HttpGet]
-        public async Task<ResponseMsg> GetCurrentTrip(string tripId)
+        public async Task<ResponseMsg> GetCurrentTrip([FromBody]object tripIdJson)
         {
+            JObject objTemp = JObject.Parse(tripIdJson.ToString());
+            string tripId = (string)objTemp["tripId"];
             Models.Trip result = await Repository.Trip.GetTrip(Guid.Parse(tripId));
             return new ResponseMsg
             {
@@ -89,8 +99,12 @@ namespace TripService.Controllers
 
 
         [HttpGet]
-        public async Task<ResponseMsg> GetCurrentTripForPassenger(string passengerId, string requestId)
+        public async Task<ResponseMsg> GetCurrentTripForPassenger([FromBody]object passengerTrip)
         {
+            JObject objTemp = JObject.Parse(passengerTrip.ToString());
+            string passengerId = (string)objTemp["passengerId"];
+            string requestId = (string)objTemp["requestId"];
+            
             Models.Trip trip = await Repository.Trip.GetTripForPassenger(Guid.Parse(passengerId), Guid.Parse(requestId));
             return new ResponseMsg
             {
@@ -101,8 +115,10 @@ namespace TripService.Controllers
         }
 
         [HttpPost]
-        public async Task<ResponseMsg> PickedPassenger(string tripId)
+        public async Task<ResponseMsg> PickedPassenger([FromBody] object tripIdJson)
         {
+            JObject objTemp = JObject.Parse(tripIdJson.ToString());
+            string tripId = (string)objTemp["tripId"];
             int result = await Repository.Trip.PickedPassenger(Guid.Parse(tripId));
             return new ResponseMsg
             {

@@ -1,6 +1,7 @@
 ﻿using Helper.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using TripService.Models;
 using TripService.Repositories;
 
@@ -36,8 +37,10 @@ namespace TripService.Controllers
         }
 
         [HttpPost]
-        public async Task<ResponseMsg> CancelRequest(string requestId)
+        public async Task<ResponseMsg> CancelRequest([FromBody]object requestIdJson)
         {
+            JObject objTemp = JObject.Parse(requestIdJson.ToString());
+            string requestId = (string)objTemp["requestId"];
             int result = await Repository.TripRequest.CancelRequest(Guid.Parse(requestId));
             return new ResponseMsg
             {

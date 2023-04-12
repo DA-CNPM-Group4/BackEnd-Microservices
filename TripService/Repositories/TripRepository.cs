@@ -70,6 +70,10 @@ namespace TripService.Repositories
             Models.Trip trip = await context.Trip.FindAsync(tripId);
             if (trip != null)
             {
+                if (trip.TripStatus != Catalouge.Trip.PickingUpCus)
+                {
+                    return 0;
+                }
                 trip.TripStatus = Catalouge.Trip.OnTheWay;
                 _fireBaseServices.UpdateOnGoingTrip(trip);
                 return await context.SaveChangesAsync();
@@ -98,6 +102,10 @@ namespace TripService.Repositories
         public async Task<int> CancelTrip(Guid tripId)
         {
             Models.Trip trip = await context.Trip.FindAsync(tripId);
+            if(trip == null)
+            {
+                return 0;
+            }
             trip.TripStatus = Catalouge.Trip.CanceledByDriver;
             _fireBaseServices.RemoveTrip(tripId);
             return await context.SaveChangesAsync();

@@ -58,7 +58,19 @@
         }
       ],
       "DownstreamPathTemplate": "/api/Chat/{controller}/{action}"
-    }
+    },
+    //GraphQL
+    {
+      "DownstreamPathTemplate": "/graphql",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tripservice",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/graphql"
+    },
   ],
   "GlobalConfiguration": {
     "BaseUrl": "http://localhost:800"

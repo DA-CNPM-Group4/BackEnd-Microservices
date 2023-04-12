@@ -23,6 +23,10 @@ namespace TripService.Repositories
         public async Task<int> CancelRequest(Guid requestId)
         {
             TripRequest request = await context.TripRequest.FindAsync(requestId);
+            if (request == null || request.RequestStatus == Catalouge.Request.MovedToTrip)
+            {
+                return 0;
+            }
             request.RequestStatus = Catalouge.Request.Canceled;
             _fireBaseService.RemoveRequest(requestId);
             return await context.SaveChangesAsync();

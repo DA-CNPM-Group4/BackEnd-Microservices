@@ -21,7 +21,7 @@ namespace ChatService.Controllers
             return new ResponseMsg
             {
                 status = result ? true : false,
-                data = chatResponseDTO,
+                data = result ? chatResponseDTO : null,
                 message = result ? "Get chat successfully" : "Failed to get chats"
             };
 
