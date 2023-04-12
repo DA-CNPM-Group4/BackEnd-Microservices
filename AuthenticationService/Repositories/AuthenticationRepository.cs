@@ -2,6 +2,7 @@
 using Helper.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
 using System.Numerics;
 
@@ -51,10 +52,18 @@ namespace AuthenticationService.Repositories
             string loginPhone = (string)objTemp["phone"];
             string loginPassword = (string)objTemp["password"];
 
-            var usr = from user in context.AuthenticationInfo
-                      where user.Email == loginEmail && user.Phone == loginPhone && (user.Password.SequenceEqual(Helper.DoStuff.HashString(loginEmail + user.PasswordSalt + loginPassword)))
-                      select user;
-            return await usr.SingleOrDefaultAsync();
+            var user = context.AuthenticationInfo.Where(p => p.Email == loginEmail).FirstOrDefault();
+            if(user == null)
+            {
+                return null;
+            }
+            
+            var encryptedPassword = Helper.DoStuff.HashString( loginEmail + user.PasswordSalt + loginPassword);
+            if (encryptedPassword.SequenceEqual(user.Password))
+            {
+                return user;
+            }
+            return null;
         }
 
         public async Task<AuthenticationInfo> GetUserById(Guid UserId)
@@ -86,7 +95,13 @@ namespace AuthenticationService.Repositories
         public async Task<bool> ValidatePassword(Guid userId, string password)
         {
             AuthenticationInfo usr = await context.AuthenticationInfo.FindAsync(userId);
-            if (usr.Password.SequenceEqual(Helper.DoStuff.HashString(usr.Email + usr.PasswordSalt + password)))
+            if (usr == null)
+            {
+                return false;
+            }
+
+            var encryptedPassword = Helper.DoStuff.HashString(usr.Email + usr.PasswordSalt + password);
+            if (encryptedPassword.SequenceEqual(usr.Password))
             {
                 return true;
             }
@@ -213,6 +228,10 @@ namespace AuthenticationService.Repositories
         public async Task<int> ValidateEmail(string OTP, string email)
         {
             AuthenticationInfo user = await context.AuthenticationInfo.Where(p => p.Email == email).SingleOrDefaultAsync();
+            if (OTP.IsNullOrEmpty() || user.ValidateEmailString.IsNullOrEmpty())
+            {
+                return -2;
+            }
             if(user.ValidateEmailString == OTP)
             {
                 user.IsValidated = true;
@@ -227,7 +246,11 @@ namespace AuthenticationService.Repositories
         {
             AuthenticationInfo user = await context.AuthenticationInfo.Where(p => p.Email == email).SingleOrDefaultAsync();
             string pwdSalt = Helper.DoStuff.RandomString(2, 16);
-            if(user.ResetPasswordString == OTP)
+            if (OTP.IsNullOrEmpty() || user.ResetPasswordString.IsNullOrEmpty())
+            {
+                return -2;
+            }
+            if (user.ResetPasswordString == OTP)
             {
                 user.PasswordSalt = pwdSalt;
                 user.ResetPasswordString = "";

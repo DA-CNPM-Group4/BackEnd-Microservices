@@ -46,15 +46,15 @@ namespace AuthenticationService.Controllers
             string bodyMsg = "";
             if (status == "activate")
             {
-                bodyMsg += "<h2>Welcome to TaxiHub, a diverse and modern online booking vehicle system" +
-                    ", You have successfully registered an account, please use the following OTP string to activate your account:</h2>";
+                bodyMsg += "<h3>Welcome to TaxiHub, a diverse and modern online booking vehicle system" +
+                    ", You have successfully registered an account, please use the following OTP string to activate your account:</h3>";
             }
             else if(status == "resetPass")
             {
-                bodyMsg += "<h2>Welcome to TaxiHub, a diverse and modern online booking vehicle system" +
-                    ", You have just required to reset your password, please note down the following OTP string and fill it in your app to update your new password:</h2>";
+                bodyMsg += "<h3>Welcome to TaxiHub, a diverse and modern online booking vehicle system" +
+                    ", You have just required to reset your password, please note down the following OTP string and fill it in your app to update your new password:</h3>";
             }
-            bodyMsg += $"<h3>{OTP}</h3>";
+            bodyMsg += $"<h2>{OTP}</h2>";
             bodyMsg += "<img src=\"https://drive.google.com/uc?export=download&id=1xkcnw7uAxlJGtoNoPp_4F197TMnNsogq\" height=\"500\">";
             return bodyMsg;
         }
