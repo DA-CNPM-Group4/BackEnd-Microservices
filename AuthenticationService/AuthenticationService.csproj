@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Grpc.Net.Client" Version="2.52.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.15" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.0" />
@@ -31,6 +32,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ApiKeyManager\ApiKeyManager.csproj" />
     <ProjectReference Include="..\Helper\Helper.csproj" />
+    <ProjectReference Include="..\InfoServiceGRPC\InfoServiceGRPC.csproj" />
     <ProjectReference Include="..\JwtTokenManager\JwtTokenManager.csproj" />
   </ItemGroup>
 

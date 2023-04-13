@@ -1,5 +1,7 @@
 ﻿using AuthenticationService.Models;
+using Grpc.Net.Client;
 using Helper.Models;
+using InfoServiceGRPC;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -42,6 +44,65 @@ namespace AuthenticationService.Repositories
             registerData.PasswordSalt = pwdSalt;
             registerData.Password = Helper.DoStuff.HashString(registerData.Email + pwdSalt + registerPassword);
             await context.AddAsync(registerData);
+
+            int mode = int.Parse((string)objTemp["mode"]);
+            if(mode == 2)
+            {
+                string grpcServerURL = "http://host.docker.internal:8003";
+                if (registerData.Role == Helper.Catalouge.Role.Passenger)
+                {
+                    //var channel = new Grpc.Core.Channel("localhost", 65147, ChannelCredentials.Insecure);
+                    //var channel = GrpcChannel.ForAddress("http://host.docker.internal:51194", new GrpcChannelOptions
+                    //{
+                    //    HttpHandler = new GrpcWebHandler(GrpcWebMode.GrpcWeb, handler),
+                    //});
+
+                    var channel = GrpcChannel.ForAddress(grpcServerURL);
+                    var client = new InfoServiceGRPC.InfoGRPC.InfoGRPCClient(channel);
+                    var request = new AddPassengerRequest
+                    {
+                        AccountId = registerData.AccountId.ToString(),
+                        Email = registerData.Email,
+                        Phone = registerData.Phone,
+                        Name = registerData.Name,
+                        Gender = (bool)objTemp["gender"],
+                    };
+                    var response = await client.AddPassengerAsync(request);
+                }
+                else if(registerData.Role == Helper.Catalouge.Role.Staff)
+                {
+                    var channel = GrpcChannel.ForAddress(grpcServerURL);
+                    var client = new InfoServiceGRPC.InfoGRPC.InfoGRPCClient(channel);
+                    var request = new AddStaffRequest
+                    {
+                        AccountId = registerData.AccountId.ToString(),
+                        IdentityNumber = (string)objTemp["identityNumber"],
+                        Phone = registerData.Phone,
+                        Email = registerData.Email,
+                        Name = registerData.Name,
+                        Gender = (bool)objTemp["gender"],
+                        Address = (string)objTemp["address"]
+                    };
+                    var response = await client.AddStaffAsync(request);
+                }
+                else if (registerData.Role == Helper.Catalouge.Role.Driver)
+                {
+                    var channel = GrpcChannel.ForAddress(grpcServerURL);
+                    var client = new InfoServiceGRPC.InfoGRPC.InfoGRPCClient(channel);
+                    var request = new AddDriverRequest
+                    {
+                        AccountId = registerData.AccountId.ToString(),
+                        IdentityNumber = (string)objTemp["identityNumber"],
+                        Phone = registerData.Phone,
+                        Email = registerData.Email,
+                        Name = registerData.Name,
+                        Gender = (bool)objTemp["gender"],
+                        Address = (string)objTemp["address"]
+                    };
+                    var response = await client.AddDriverAsync(request);
+                }
+            }
+
             return await context.SaveChangesAsync();
         }
 
