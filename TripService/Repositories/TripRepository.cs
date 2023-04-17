@@ -1,6 +1,7 @@
 ﻿using Helper;
 using Microsoft.EntityFrameworkCore;
 using RabbitMQ.Client;
+using System.Globalization;
 using TripService.FireBaseServices;
 using TripService.Models;
 using TripService.RabbitMQServices;
@@ -138,15 +139,38 @@ namespace TripService.Repositories
             return trip;
         }
 
+        public async Task<object> GetCompletedTrips(Guid driverId, string from, string to)
+        {
+            DateTime fromTime = DateTime.ParseExact(from, "d/M/yyyy", CultureInfo.InvariantCulture);
+            DateTime toTime = DateTime.ParseExact(to, "d/M/yyyy", CultureInfo.InvariantCulture);
+            if (fromTime == toTime)
+            {
+                DateTime startDateTime = fromTime; //Today at 00:00:00
+                DateTime endDateTime = toTime.AddDays(1).AddTicks(-1); //Today at 23:59:59
+                List<Models.Trip> driverTodayTrips = context.Trip.Where(t => t.DriverId == driverId && t.CompleteTime >= startDateTime && t.CompleteTime <= endDateTime && t.TripStatus == Catalouge.Trip.Done).ToList();
+                return new
+                {
+                    total = driverTodayTrips.Count,
+                    trips = driverTodayTrips
+                };
+            }
+            List<Models.Trip> driverTrips = context.Trip.Where(t => t.DriverId == driverId && t.CompleteTime >= fromTime && t.CompleteTime <= toTime && t.TripStatus == Catalouge.Trip.Done).ToList();
+
+            return new { 
+                total = driverTrips.Count,
+                trips = driverTrips
+            };
+        }
+
         public async Task<int> GetIncome(Guid driverId, string from, string to)
         {
             int totalPrice = 0;
-            DateTime fromTime = DateTime.Parse(from);
-            DateTime toTime = DateTime.Parse(to);
+            DateTime fromTime = DateTime.ParseExact(from, "d/M/yyyy", CultureInfo.InvariantCulture);
+            DateTime toTime = DateTime.ParseExact(to, "d/M/yyyy", CultureInfo.InvariantCulture);
             if(fromTime == toTime)
             {
-                DateTime startDateTime = DateTime.Today; //Today at 00:00:00
-                DateTime endDateTime = DateTime.Today.AddDays(1).AddTicks(-1); //Today at 23:59:59
+                DateTime startDateTime = fromTime; //Today at 00:00:00
+                DateTime endDateTime = toTime.AddDays(1).AddTicks(-1); //Today at 23:59:59
                 List<Models.Trip> driverTodayTrips = context.Trip.Where(t => t.DriverId == driverId && t.CompleteTime >= startDateTime && t.CompleteTime <= endDateTime && t.TripStatus == Catalouge.Trip.Done).ToList();
                 foreach (var trip in driverTodayTrips)
                 {

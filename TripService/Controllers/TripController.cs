@@ -158,6 +158,36 @@ namespace TripService.Controllers
         }
 
         [HttpGet]
+        public async Task<ResponseMsg> GetCompletedTrips([FromBody]object getCompletedTrips)
+        {
+            JObject objTemp = JObject.Parse(getCompletedTrips.ToString());
+            string driverId = (string)objTemp["driverId"];
+            string from = (string)objTemp["from"];
+            string to = (string)objTemp["to"];
+
+            var result = await Repository.Trip.GetCompletedTrips(Guid.Parse(driverId), from, to);
+            if (result != null)
+            {
+                return new ResponseMsg
+                {
+                    status = true,
+                    data = result,
+                    message = "Get completed trips successfully"
+                };
+            }
+            return new ResponseMsg
+            {
+                status = false,
+                data = new
+                {
+                    total = 0,
+                    trips = new List<string> { }
+                },
+                message = "Failed to get completed trips"
+            };
+        }
+
+        [HttpGet]
         public async Task<ResponseMsg> ClearDb()
         {
             await Repository.Trip.ClearTable();
