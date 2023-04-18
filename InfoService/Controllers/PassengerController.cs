@@ -21,6 +21,38 @@ namespace InfoService.Controllers
             };
         }
 
+        [HttpGet]
+        public async Task<ResponseMsg> GetNumOfPages(int pageSize)
+        {
+            return new ResponseMsg
+            {
+                status = true,
+                data = await Repository.Passenger.CalcNumOfPages(pageSize),
+                message = "Get num of pages success"
+            };
+        }
+
+        [HttpGet]
+        public async Task<ResponseMsg> GetPassengersWithPagination(int pageSize, int pageNum)
+        {
+            int totalPage = await Repository.Passenger.CalcNumOfPages(pageSize);
+            if (pageNum > totalPage)
+            {
+                return new ResponseMsg
+                {
+                    status = false,
+                    data = null,
+                    message = $"The pageNum you input is greater than the max number of pages, try another pageSize or smaller pageNum"
+                };
+            }
+            return new ResponseMsg
+            {
+                status = true,
+                data = await Repository.Passenger.GetPassengersWithPagination(pageNum, pageSize),
+                message = $"Get passengers in page {pageNum} success"
+            };
+        }
+
         [HttpPost]
         public async Task<ResponseMsg> AddInfo(Passenger passenger)
         {

@@ -9,6 +9,22 @@ namespace InfoService.Repositories
         {
         }
 
+        public async Task<int> CalcNumOfPages(int pageSize)
+        {
+            int totalRecords = context.Driver.Count();
+            return (int)Math.Ceiling((double)totalRecords / pageSize);
+        }
+
+        public async Task<List<Driver>> GetDriversWithPagination(int pageNum, int pageSize)
+        {
+            var drivers = context.Driver
+                            .OrderBy(p => p.AccountNum)
+                            .Skip((pageNum - 1) * pageSize)
+                            .Take(pageSize)
+                            .ToList();
+            return drivers;
+        }
+
         public async Task<int> AddDriverInfo(Driver driver)
         {
             await context.Driver.AddAsync(driver);

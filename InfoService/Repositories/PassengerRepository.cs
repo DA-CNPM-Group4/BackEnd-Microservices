@@ -12,6 +12,23 @@ namespace InfoService.Repositories
         {
             return await context.Passenger.ToListAsync();
         }
+
+        public async Task<int> CalcNumOfPages(int pageSize)
+        {
+            int totalRecords = context.Passenger.Count();
+            return (int)Math.Ceiling((double)totalRecords / pageSize);
+        }
+
+        public async Task<List<Passenger>> GetPassengersWithPagination(int pageNum, int pageSize)
+        {
+            var passengers = context.Passenger
+                            .OrderBy(p => p.AccountNum)
+                            .Skip((pageNum - 1) * pageSize)
+                            .Take(pageSize)
+                            .ToList();
+            return passengers;
+        }
+
         public async Task<int> AddPassengerInfo(Passenger passenger)
         {
             await context.Passenger.AddAsync(passenger);

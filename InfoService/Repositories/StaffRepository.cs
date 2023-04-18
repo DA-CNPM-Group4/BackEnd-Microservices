@@ -14,6 +14,22 @@ namespace InfoService.Repositories
             return await context.Staff.ToListAsync();
         }
 
+        public async Task<int> CalcNumOfPages(int pageSize)
+        {
+            int totalRecords = context.Staff.Count();
+            return (int)Math.Ceiling((double)totalRecords / pageSize);
+        }
+
+        public async Task<List<Staff>> GetStaffsWithPagination(int pageNum, int pageSize)
+        {
+            var staffs = context.Staff
+                            .OrderBy(p => p.AccountNum)
+                            .Skip((pageNum - 1) * pageSize)
+                            .Take(pageSize)
+                            .ToList();
+            return staffs;
+        }
+
         public async Task<int> AddStaffInfo(Staff staff)
         {
             await context.Staff.AddAsync(staff);

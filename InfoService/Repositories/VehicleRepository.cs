@@ -8,6 +8,23 @@ namespace InfoService.Repositories
         public VehicleRepository(InfoDbContext context) : base(context)
         {
         }
+
+        public async Task<int> CalcNumOfPages(int pageSize)
+        {
+            int totalRecords = context.Vehicle.Count();
+            return (int)Math.Ceiling((double)totalRecords / pageSize);
+        }
+
+        public async Task<List<Vehicle>> GetVehiclesWithPagination(int pageNum, int pageSize)
+        {
+            var vehicles = context.Vehicle
+                            .OrderBy(p => p.VehicleNum)
+                            .Skip((pageNum - 1) * pageSize)
+                            .Take(pageSize)
+                            .ToList();
+            return vehicles;
+        }
+
         public async Task<bool> CheckDriverHasVehicleAlready(Guid driverId)
         {
             return await context.Vehicle.AnyAsync(p => p.DriverId == driverId);
