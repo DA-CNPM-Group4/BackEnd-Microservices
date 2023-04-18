@@ -11,11 +11,12 @@ using Newtonsoft.Json.Linq;
 using System.Text;
 using System.Threading.Channels;
 using JwtTokenManager;
+using InfoService;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Services.AddGraphQLServer().AddQueryType<Query>();
 builder.Services.AddControllers();
 builder.Services.AddCors();
 builder.Services.AddJwtAuthExtension();
@@ -105,5 +106,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.MapGraphQL("/info/graphql");
 app.Run();

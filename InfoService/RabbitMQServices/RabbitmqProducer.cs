@@ -1,5 +1,4 @@
-﻿using AuthenticationService.RabbitMQServices;
-using Microsoft.AspNetCore.Connections;
+﻿using Microsoft.AspNetCore.Connections;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using System.Text;

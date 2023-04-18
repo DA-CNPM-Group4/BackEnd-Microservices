@@ -37,5 +37,5 @@ app.UseMiddleware<ApiKeyMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-app.MapGraphQL();
+app.MapGraphQL("/trip/graphql");
 app.Run();

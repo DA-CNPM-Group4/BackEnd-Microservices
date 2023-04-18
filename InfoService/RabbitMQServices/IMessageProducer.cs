@@ -1,4 +1,4 @@
-﻿namespace AuthenticationService.RabbitMQServices
+﻿namespace InfoService.RabbitMQServices
 {
     public interface IMessageProducer
     {

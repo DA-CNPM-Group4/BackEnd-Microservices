@@ -61,7 +61,7 @@
     },
     //GraphQL
     {
-      "DownstreamPathTemplate": "/graphql",
+      "DownstreamPathTemplate": "/trip/graphql",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -69,8 +69,19 @@
           "Port": 80
         }
       ],
-      "UpstreamPathTemplate": "/graphql"
+      "UpstreamPathTemplate": "/trip/graphql"
     },
+    {
+      "DownstreamPathTemplate": "/info/graphql",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "infoservice",
+          "Port": 80
+        }
+      ],
+      "UpstreamPathTemplate": "/info/graphql"
+    }
   ],
   "GlobalConfiguration": {
     "BaseUrl": "http://localhost:800"
