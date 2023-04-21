@@ -63,8 +63,8 @@ namespace InfoService.Repositories
             //{
             //    builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
             //});
-            var connectionString = "";
-            builder.UseSqlServer(connectionString);
+            var connectionString = "User Id=postgres;Password=doancnpmnhom4;Server=db.ubfzgybkkfsoeimwhlba.supabase.co;Port=5432;Database=postgres";
+            builder.UseNpgsql(connectionString);
         }
     }
 }

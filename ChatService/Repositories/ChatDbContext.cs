@@ -9,7 +9,11 @@ namespace ChatService.Repositories
         public DbSet<Chat> Chat { get; set; }
         public DbSet<ChatMessage> ChatMessage { get; set; }
 
-
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.HasDefaultSchema("public");
+            base.OnModelCreating(modelBuilder);
+        }
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
 
@@ -27,8 +31,8 @@ namespace ChatService.Repositories
             //{
             //    builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
             //});
-            var connectionString = "";
-            builder.UseSqlServer(connectionString);
+            var connectionString = "User Id=postgres;Password=doancnpmnhom4;Server=db.wrschhvmkyvmpwvwteab.supabase.co;Port=5432;Database=postgres";
+            builder.UseNpgsql(connectionString);
         }
     }
 }

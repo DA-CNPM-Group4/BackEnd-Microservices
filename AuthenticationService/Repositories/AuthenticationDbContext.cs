@@ -8,6 +8,13 @@ namespace AuthenticationService.Repositories
     {
         public DbSet<AuthenticationInfo> AuthenticationInfo { get; set; }
         public DbSet<EmailSender> EmailSender { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.HasDefaultSchema("public");
+            base.OnModelCreating(modelBuilder);
+        }
+            
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
             base.OnConfiguring(builder);
@@ -25,7 +32,7 @@ namespace AuthenticationService.Repositories
             //});
 
             var connectionString = "";
-            builder.UseSqlServer(connectionString);
+            builder.UseNpgsql(connectionString);
         }
     }
 }
