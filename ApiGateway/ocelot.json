@@ -34,14 +34,32 @@
     {
       "UpstreamPathTemplate": "/api/Trip/{controller}/{action}",
       "UpstreamHttpMethod": [ "Get", "Post" ],
-
       "DownstreamScheme": "http",
+      "LoadBalancerOptions": {
+        "Type": "RoundRobin"
+      },
       "DownstreamHostAndPorts": [
         {
           "Host": "tripservice",
           "Port": 80
+        },
+        {
+          "Host": "tripservice2",
+          "Port": 80
+        },
+        {
+          "Host": "tripservice3",
+          "Port": 80
         }
       ],
+      "AddHeadersToRequest": {
+        "X-Forwarded-Host": "{DownstreamHost}",
+        "X-Forwarded-Port": "{DownstreamPort}",
+        "X-Server-Port": "{DownstreamPort}"
+      },
+      "AddHeadersToResponse": {
+        "X-Server-Port": "{DownstreamPort}"
+      },
       "DownstreamPathTemplate": "/api/Trip/{controller}/{action}"
     },
 

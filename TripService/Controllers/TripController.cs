@@ -6,6 +6,10 @@ using Newtonsoft.Json.Linq;
 using TripService.DTOs;
 using TripService.Models;
 using static Helper.Catalouge;
+using static Helper.Redis;
+using Docker.DotNet;
+using Helper;
+using Newtonsoft.Json;
 
 namespace TripService.Controllers
 {
@@ -96,6 +100,48 @@ namespace TripService.Controllers
             };
         }
 
+        [HttpGet]
+        public async Task<ResponseMsg> GetCurrentTripWithCaching([FromBody] object tripIdJson)
+        {
+            JObject objTemp = JObject.Parse(tripIdJson.ToString());
+            string tripId = (string)objTemp["tripId"];
+            string val = Redis.GetRedisVal(tripId);
+            if (val != "")
+            {
+                Models.Trip deserializedTrip = JsonConvert.DeserializeObject<Models.Trip>(val);
+                return new ResponseMsg
+                {
+                    status = true,
+                    data = deserializedTrip,
+                    message = "Get trip successfully, this trip already stayed in cache memmory"
+                };
+            }
+            else
+            {
+                Models.Trip result = await Repository.Trip.GetTrip(Guid.Parse(tripId));
+                if(result != null)
+                {
+                    string json = JsonConvert.SerializeObject(result);
+                    Redis.SetRedisVal(tripId, json, 5);
+                    return new ResponseMsg
+                    {
+                        status = true,
+                        data = result,
+                        message = "Get trip successfully, this trip is just added to cache memory",
+                    };
+                }
+                else
+                {
+                    return new ResponseMsg
+                    {
+                        status = false,
+                        data = null,
+                        message = "Failed to get trip, this trip doesn't exist so it won't be added into cache memory",
+                    };
+                }
+            }
+        }
+
 
 
         [HttpGet]
@@ -154,6 +200,56 @@ namespace TripService.Controllers
                 status = true,
                 data = income,
                 message = "Get income successfully"
+            };
+        }
+
+        [HttpGet]
+        public async Task<ResponseMsg> TestCaching(string id)
+        {
+            string val = Redis.GetRedisVal(id);
+            if (val != "")
+            {
+                return new ResponseMsg
+                {
+                    status = true,
+                    data = new
+                    {
+                        value = val
+                    },
+                    message = "Test caching success, this value is already stored in cache memory"
+                };
+            }
+
+            string response = "This is a caching value";
+            Redis.SetRedisVal(id, response, 10);
+            return new ResponseMsg
+            {
+                status = true,
+                data = new
+                {
+                    value = response
+                },
+                message = "Save value to redis success"
+            };
+        }
+
+        [HttpGet]
+        public async Task<ResponseMsg> TestLoadBalancing()
+        {
+            // create a DockerClient instance
+            var dockerClient = new DockerClientConfiguration(new Uri("unix:///var/run/docker.sock")).CreateClient();
+
+            // get the container ID for the current running container
+            var containerID = Environment.GetEnvironmentVariable("HOSTNAME");
+
+            // get the container port information
+            //var containerResponse = await dockerClient.Containers.InspectContainerAsync(containerID);
+
+            return new ResponseMsg
+            {
+                status = true,
+                data = new { containerID = containerID },
+                message = $"The request is handled on the container which have the containerID = {containerID}"
             };
         }
 

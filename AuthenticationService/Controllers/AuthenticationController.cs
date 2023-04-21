@@ -505,6 +505,7 @@ namespace AuthenticationService.Controllers
             JObject objTemp = JObject.Parse(loginToken.ToString());
             string googleToken = (string)objTemp["loginToken"];
             string role = (string)objTemp["role"];
+
             string urlVerify = $"https://www.googleapis.com/oauth2/v3/tokeninfo?access_token={googleToken}";
             bool tokenIsValidated = await VerifyGoogleToken(urlVerify);
             if(tokenIsValidated == true)
