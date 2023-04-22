@@ -111,7 +111,7 @@ namespace AuthenticationService.Controllers
             string sendMailResult = Helper.DoStuff.SendEmails(sender, msg);
             if (sendMailResult == "Send mail success")
             {
-                Repository.Authentication.IncreaseMailSent(sender.usr);
+                await Repository.Authentication.IncreaseMailSent(sender.usr);
                 return new ResponseMsg
                 {
                     status = true,

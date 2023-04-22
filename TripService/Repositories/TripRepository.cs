@@ -154,6 +154,7 @@ namespace TripService.Repositories
                     trips = driverTodayTrips
                 };
             }
+            toTime = toTime.AddDays(1).AddTicks(-1);
             List<Models.Trip> driverTrips = context.Trip.Where(t => t.DriverId == driverId && t.CompleteTime >= fromTime && t.CompleteTime <= toTime && t.TripStatus == Catalouge.Trip.Done).ToList();
 
             return new { 
@@ -181,6 +182,7 @@ namespace TripService.Repositories
                 }
                 return totalPrice;
             }
+            toTime = toTime.AddDays(1).AddTicks(-1);
             List<Models.Trip> driverTrips = context.Trip.Where(t => t.DriverId == driverId && t.CompleteTime >= fromTime && t.CompleteTime <= toTime &&  t.TripStatus == Catalouge.Trip.Done).ToList();
             foreach(var trip in driverTrips)
             {
