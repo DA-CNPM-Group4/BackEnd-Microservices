@@ -252,8 +252,8 @@ namespace AuthenticationService.Repositories
 
         public async Task<EmailSender> GetMailSender()
         {
-            string sql = "Select * from EmailSender";
-            EmailSender sender = await context.EmailSender.FromSqlRaw<EmailSender>(sql).SingleOrDefaultAsync();
+            //string sql = "Select * from dbo.EmailSender";
+            EmailSender sender = await context.EmailSender.SingleOrDefaultAsync();
             return sender;
         }
 

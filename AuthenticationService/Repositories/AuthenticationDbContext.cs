@@ -9,16 +9,16 @@ namespace AuthenticationService.Repositories
         public DbSet<AuthenticationInfo> AuthenticationInfo { get; set; }
         public DbSet<EmailSender> EmailSender { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.HasDefaultSchema("public");
-            base.OnModelCreating(modelBuilder);
-        }
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.HasDefaultSchema("public");
+        //    base.OnModelCreating(modelBuilder);
+        //}
             
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
             base.OnConfiguring(builder);
-
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
             ////var dbHost = ".\\SQLEXPRESS";
             //var dbHost = Environment.GetEnvironmentVariable("DB_HOST");
             ////var dbName = "dms_info";

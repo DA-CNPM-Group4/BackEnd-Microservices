@@ -50,7 +50,7 @@ namespace InfoService.Repositories
         {
 
             base.OnConfiguring(builder);
-
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
             ////var dbHost = ".\\SQLEXPRESS";
             //var dbHost = Environment.GetEnvironmentVariable("DB_HOST");
             ////var dbName = "dms_info";
@@ -63,7 +63,7 @@ namespace InfoService.Repositories
             //{
             //    builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
             //});
-            var connectionString = "User Id=postgres;Password=doancnpmnhom4;Server=db.ubfzgybkkfsoeimwhlba.supabase.co;Port=5432;Database=postgres";
+            var connectionString = "";
             builder.UseNpgsql(connectionString);
         }
     }

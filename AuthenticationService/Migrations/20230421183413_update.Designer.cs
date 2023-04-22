@@ -3,6 +3,7 @@ using System;
 using AuthenticationService.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,12 +12,15 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AuthenticationService.Migrations
 {
     [DbContext(typeof(AuthenticationDbContext))]
-    partial class AuthenticationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230421183413_update")]
+    partial class update
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("public")
                 .HasAnnotation("ProductVersion", "7.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -70,7 +74,7 @@ namespace AuthenticationService.Migrations
 
                     b.HasKey("AccountId");
 
-                    b.ToTable("AuthenticationInfo");
+                    b.ToTable("AuthenticationInfo", "public");
                 });
 
             modelBuilder.Entity("Helper.Models.EmailSender", b =>

@@ -28,7 +28,7 @@ namespace TripService.Repositories
             //    builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
             //});
 
-            var connectionString = "User Id=postgres;Password=doancnpmnhom4;Server=db.mbbzmbkmyouqjjstapam.supabase.co;Port=5432;Database=postgres";
+            var connectionString = "";
             builder.UseNpgsql(connectionString);
         }
     }
