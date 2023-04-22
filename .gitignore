@@ -408,3 +408,4 @@ FodyWeavers.xsd
 /ChatService/Repositories/ChatDbContext.cs
 /InfoService/Repositories/InfoDbContext.cs
 /TripService/Repositories/TripDbContext.cs
+/AuthenticationService/Repositories/AuthenticationDbContext.cs

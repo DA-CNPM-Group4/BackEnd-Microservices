@@ -41,6 +41,12 @@ namespace TripService.Repositories
             return feedBack;
         }
 
+        public async Task<int> CalcNumOfPages(int pageSize)
+        {
+            int totalRecords = context.TripFeedback.Count();
+            return (int)Math.Ceiling((double)totalRecords / pageSize);
+        }
+
         public async Task<int> ClearTable()
         {
             context.RemoveRange(context.TripFeedback);

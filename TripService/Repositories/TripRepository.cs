@@ -222,6 +222,43 @@ namespace TripService.Repositories
             return await context.Trip.ToListAsync();
         }
 
+
+
+        public async Task<int> CalcNumOfPagesForPassenger(Guid passengerId, int pageSize)
+        {
+            int totalRecords = await context.Trip.Where(t => t.PassengerId == passengerId).CountAsync();
+            return (int)Math.Ceiling((double)totalRecords / pageSize);
+        }
+
+        public async Task<int> CalcNumOfPagesForDriver(Guid driverId, int pageSize)
+        {
+            int totalRecords = await context.Trip.Where(t => t.DriverId == driverId).CountAsync();
+            return (int)Math.Ceiling((double)totalRecords / pageSize);
+        }
+
+        public async Task<List<Models.Trip>> GetPassengerTripsPaging(Guid passengerId, int pageSize, int pageNum)
+        {
+            var passengerTrips = context.Trip
+                            .Where(p => p.PassengerId == passengerId)
+                            .OrderBy(p => p.CreatedTime)
+                            .Skip((pageNum - 1) * pageSize)
+                            .Take(pageSize)
+                            .ToList();
+            return passengerTrips;
+        }
+
+        public async Task<List<Models.Trip>> GetDriverTripsPaging(Guid driverId, int pageSize, int pageNum)
+        {
+            var driverTrips = context.Trip
+                            .Where(p => p.DriverId == driverId)
+                            .OrderBy(p => p.CreatedTime)
+                            .Skip((pageNum - 1) * pageSize)
+                            .Take(pageSize)
+                            .ToList();
+            return driverTrips;
+        }
+
+
         public async Task<int> ClearTable()
         {
             context.RemoveRange(context.Trip);

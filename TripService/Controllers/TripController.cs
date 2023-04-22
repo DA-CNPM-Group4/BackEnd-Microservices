@@ -59,6 +59,102 @@ namespace TripService.Controllers
         }
 
         [HttpGet]
+        public async Task<ResponseMsg> GetPassengersTripTotalPages([FromBody] object tripJson)
+        {
+            JObject objTemp = JObject.Parse(tripJson.ToString());
+            string passengerId = (string)objTemp["passengerId"];
+            int pageSize = Convert.ToInt32(objTemp["pageSize"]);
+
+            return new ResponseMsg
+            {
+                status = true,
+                data = await Repository.Trip.CalcNumOfPagesForPassenger(Guid.Parse(passengerId), pageSize),
+                message = "Get num of pages successfully"
+            };
+        }
+
+        [HttpGet]
+        public async Task<ResponseMsg> GetDriverTripTotalPages([FromBody] object tripJson)
+        {
+            JObject objTemp = JObject.Parse(tripJson.ToString());
+            string driverId = (string)objTemp["driverId"];
+            int pageSize = Convert.ToInt32(objTemp["pageSize"]);
+
+            return new ResponseMsg
+            {
+                status = true,
+                data = await Repository.Trip.CalcNumOfPagesForDriver(Guid.Parse(driverId), pageSize),
+                message = "Get num of pages successfully"
+            };
+        }
+
+        [HttpGet]
+        public async Task<ResponseMsg> GetPassengersTripPaging([FromBody] object tripJson)
+        {
+            JObject objTemp = JObject.Parse(tripJson.ToString());
+            string passengerId = (string)objTemp["passengerId"];
+            int pageSize = Convert.ToInt32(objTemp["pageSize"]);
+            int pageNum = Convert.ToInt32(objTemp["pageNum"]);
+            if (pageNum == 0)
+            {
+                pageNum = 1;
+            }
+            if(pageSize == 0)
+            {
+                pageSize = 15;
+            }
+            int totalPage = await Repository.Trip.CalcNumOfPagesForPassenger(Guid.Parse(passengerId), pageSize);
+            if (pageNum > totalPage)
+            {
+                return new ResponseMsg
+                {
+                    status = false,
+                    data = null,
+                    message = $"The pageNum you input is greater than the max number of pages, try another pageSize or smaller pageNum"
+                };
+            }
+            return new ResponseMsg
+            {
+                status = true,
+                data = await Repository.Trip.GetPassengerTripsPaging(Guid.Parse(passengerId), pageSize, pageNum),
+                message = "Get num of pages successfully"
+            };
+        }
+
+        [HttpGet]
+        public async Task<ResponseMsg> GetDriverTripPageing([FromBody] object tripJson)
+        {
+            JObject objTemp = JObject.Parse(tripJson.ToString());
+            string driverId = (string)objTemp["driverId"];
+            int pageSize = Convert.ToInt32(objTemp["pageSize"]);
+            int pageNum = Convert.ToInt32(objTemp["pageNum"]);
+            if (pageNum == 0)
+            {
+                pageNum = 1;
+            }
+            if (pageSize == 0)
+            {
+                pageSize = 15;
+            }
+            int totalPage = await Repository.Trip.CalcNumOfPagesForDriver(Guid.Parse(driverId), pageSize);
+            if (pageNum > totalPage)
+            {
+                return new ResponseMsg
+                {
+                    status = false,
+                    data = null,
+                    message = $"The pageNum you input is greater than the max number of pages, try another pageSize or smaller pageNum"
+                };
+            }
+            return new ResponseMsg
+            {
+                status = true,
+                data = await Repository.Trip.GetDriverTripsPaging(Guid.Parse(driverId), pageSize, pageNum),
+                message = "Get num of pages successfully"
+            };
+        }
+
+        [HttpGet]
         public async Task<ResponseMsg> GetPassengerTrips([FromBody] object passengerIdJson)
         {
             JObject objTemp = JObject.Parse(passengerIdJson.ToString());

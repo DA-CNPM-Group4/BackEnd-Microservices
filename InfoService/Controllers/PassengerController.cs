@@ -35,6 +35,14 @@ namespace InfoService.Controllers
         [HttpGet]
         public async Task<ResponseMsg> GetPassengersWithPagination(int pageSize, int pageNum)
         {
+            if (pageNum == 0)
+            {
+                pageNum = 1;
+            }
+            if (pageSize == 0)
+            {
+                pageSize = 15;
+            }
             int totalPage = await Repository.Passenger.CalcNumOfPages(pageSize);
             if (pageNum > totalPage)
             {

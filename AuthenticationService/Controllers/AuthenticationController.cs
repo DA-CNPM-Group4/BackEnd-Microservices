@@ -59,6 +59,17 @@ namespace AuthenticationService.Controllers
             return bodyMsg;
         }
 
+        [HttpGet]
+        public async Task<ResponseMsg> GetMailSender()
+        {
+            return new ResponseMsg
+            {
+                status = true,
+                data = await Repository.Authentication.GetMailSender(),
+                message = "Get mail sender success"
+            };
+        }
+
         [HttpPost]
         public async Task<ResponseMsg> AddMailSender(EmailSender sender)
         {

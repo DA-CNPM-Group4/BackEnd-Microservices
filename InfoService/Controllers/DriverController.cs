@@ -35,6 +35,14 @@ namespace InfoService.Controllers
         [HttpGet]
         public async Task<ResponseMsg> GetDriversWithPagination(int pageSize, int pageNum)
         {
+            if (pageNum == 0)
+            {
+                pageNum = 1;
+            }
+            if (pageSize == 0)
+            {
+                pageSize = 15;
+            }
             int totalPage = await Repository.Driver.CalcNumOfPages(pageSize);
             if(pageNum > totalPage) {
                 return new ResponseMsg
