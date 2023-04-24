@@ -26,8 +26,9 @@ namespace TripService.DataAccess
 
         private string GetConnectionString(string userId)
         {
+            int userid = Guid.Parse(userId).GetHashCode();
             using var md5 = MD5.Create();
-            var hash = md5.ComputeHash(Encoding.ASCII.GetBytes(userId));
+            var hash = md5.ComputeHash(Encoding.ASCII.GetBytes(userid.ToString()));
             var x = BitConverter.ToUInt16(hash, 0) % _connectionStrings.Count;
             return _connectionStrings[x];
         }
