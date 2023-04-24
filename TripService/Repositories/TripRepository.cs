@@ -109,33 +109,21 @@ namespace TripService.Repositories
             }
             trip.TripStatus = Catalouge.Trip.CanceledByDriver;
             _fireBaseServices.RemoveTrip(tripId);
+            _rabbitmqProducer.SendMessage("chat", new
+            {
+                Status = true,
+                Message = "SaveChat",
+                Data = new
+                {
+                    TripId = tripId.ToString(),
+                },
+            });
             return await context.SaveChangesAsync();
         }
 
         public async Task<Models.Trip> GetTrip(Guid tripId)
         {
             Models.Trip trip = await context.Trip.FindAsync(tripId);
-            //_messageProducer.SendMessage("info", new
-            //{
-            //    Status = true,
-            //    Message = "GetTripInfo",
-            //    Data = new
-            //    {
-            //        PassengerId = trip.PassengerId,
-            //        DriverId = trip.DriverId,
-            //        StaffId = trip.StaffId,
-            //        VehicleId = trip.VehicleId,
-            //    }
-            //});
-            ////Declare rabbitmq consumer
-            //var factory = new ConnectionFactory { Uri = new Uri("amqps://gtyepqer:MFoGZBk-zqtRAf8fZoKPYIdBIcQTOp8T@fly.rmq.cloudamqp.com/gtyepqer") };
-            //var connection = factory.CreateConnection();
-            //using var channel = connection.CreateModel();
-            //channel.ExchangeDeclare(exchange: "info", type: ExchangeType.Direct);
-            //channel.QueueDeclare(queue: "info", exclusive: false);
-            //channel.QueueBind(queue: "info", exchange: "info", routingKey: "info");
-            //RabbitmqConsumer rabbitmqConsumer = new RabbitmqConsumer(channel);
-            //channel.BasicConsume(queue: "info", autoAck: true, consumer: rabbitmqConsumer);
             return trip;
         }
 

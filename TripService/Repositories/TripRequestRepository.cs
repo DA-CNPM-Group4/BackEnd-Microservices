@@ -7,6 +7,7 @@ namespace TripService.Repositories
     public class TripRequestRepository : BaseRepository
     {
         private readonly FirebaseService _fireBaseService;
+
         public TripRequestRepository(TripDbContext context) : base(context)
         {
             _fireBaseService = new FirebaseService();
@@ -14,7 +15,6 @@ namespace TripService.Repositories
 
         public async Task<int> CreateRequest(TripRequest request)
         {
-            
             await context.TripRequest.AddAsync(request);
             _fireBaseService.AddNewRequest(request);
             return await context.SaveChangesAsync();

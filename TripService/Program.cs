@@ -1,12 +1,12 @@
 //using TripService.RabbitMQServices;
 using JwtTokenManager;
 using TripService;
+using TripService.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
-
+    
 builder.Services.AddGraphQLServer().AddQueryType<Query>();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
