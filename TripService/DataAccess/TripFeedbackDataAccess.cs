@@ -54,9 +54,16 @@ namespace TripService.DataAccess
 
         public async Task<TripFeedback> GetTripFeedback(string userId, Guid tripId)
         {
-            using var context = new TripServiceContext(GetConnectionString(userId));
-            TripFeedback feedBack = await context.TripFeedback.FindAsync(tripId);
-            return feedBack;
+            foreach (var connectionString in _connectionStrings)
+            {
+                using var context = new TripServiceContext(connectionString);
+                TripFeedback result = await context.TripFeedback.FindAsync(tripId);
+                if(result != null)
+                {
+                    return result;
+                }
+            }
+            return new TripFeedback();
         }
 
         public async Task<int> CalcNumOfPages(string userId, int pageSize)

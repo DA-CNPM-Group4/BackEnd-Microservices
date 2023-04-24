@@ -20,10 +20,13 @@ namespace TripService.Controllers
     public class TripController : BaseController
     {
         private readonly TripDataAccess _dataAccess;
-
+        private readonly TripRequestDataAccess _requestDataAccess;
+        private readonly TripFeedbackDataAccess _feedbackDataAccess;
         public TripController()
         {
             _dataAccess = new TripDataAccess(); 
+            _requestDataAccess = new TripRequestDataAccess();
+            _feedbackDataAccess = new TripFeedbackDataAccess();
         }
 
         [HttpPost]
@@ -105,7 +108,7 @@ namespace TripService.Controllers
             return new ResponseMsg
             {
                 status = true,
-                data = await Repository.Trip.CalcNumOfPagesForDriver(Guid.Parse(driverId), pageSize),
+                data = pageNum,
                 message = "Get num of pages successfully"
             };
         }
@@ -432,9 +435,9 @@ namespace TripService.Controllers
         [Authorize]
         public async Task<ResponseMsg> ClearDb()
         {
-            await Repository.Trip.ClearTable();
-            await Repository.TripRequest.ClearTable();
-            await Repository.TripFeedBack.ClearTable();
+            await _dataAccess.ClearTable();
+            await _requestDataAccess.ClearTable();
+            await _feedbackDataAccess.ClearTable();
 
             return new ResponseMsg
             {
