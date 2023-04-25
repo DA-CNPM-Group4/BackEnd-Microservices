@@ -140,7 +140,6 @@ namespace AuthenticationService.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         public async Task<ResponseMsg> ResetPassword(object resetPassObj)
         {
             JObject objTemp = JObject.Parse(resetPassObj.ToString());
