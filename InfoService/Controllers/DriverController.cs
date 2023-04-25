@@ -1,5 +1,6 @@
 ﻿using Helper.Models;
 using InfoService.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ namespace InfoService.Controllers
     public class DriverController : BaseController
     {
         [HttpGet]
+        [Authorize(Roles = "Staff")]
         public async Task<ResponseMsg> GetDrivers()
         {
             return new ResponseMsg {
@@ -33,6 +35,7 @@ namespace InfoService.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Staff")]
         public async Task<ResponseMsg> GetDriversWithPagination(int pageSize, int pageNum)
         {
             if (pageNum == 0)
@@ -85,6 +88,7 @@ namespace InfoService.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ResponseMsg> GetDriverInfoById(object accountObj)
         {
             JObject objTemp = JObject.Parse(accountObj.ToString());
@@ -111,6 +115,7 @@ namespace InfoService.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ResponseMsg> UpdateInfo(Driver driver)
         {
             if(await Repository.Driver.CheckDriverExist(driver.AccountId))

@@ -1,5 +1,5 @@
 ﻿using Helper.Models;
-using HotChocolate.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
@@ -22,7 +22,7 @@ namespace TripService.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Passenger")]
         public async Task<ResponseMsg> RateTrip(RateTripDTO rateTripDTO)
         {
             Guid UserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));

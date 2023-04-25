@@ -1,5 +1,6 @@
 ﻿using Helper.Models;
 using InfoService.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
@@ -11,6 +12,7 @@ namespace InfoService.Controllers
     public class PassengerController : BaseController
     {
         [HttpGet]
+        [Authorize(Roles = "Staff")]
         public async Task<ResponseMsg> GetPassengers()
         {
             return new ResponseMsg
@@ -33,6 +35,7 @@ namespace InfoService.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Staff")]
         public async Task<ResponseMsg> GetPassengersWithPagination(int pageSize, int pageNum)
         {
             if (pageNum == 0)
@@ -86,6 +89,7 @@ namespace InfoService.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ResponseMsg> GetPassengerInfoById(object accountObj)
         {
             JObject objTemp = JObject.Parse(accountObj.ToString());
@@ -113,6 +117,7 @@ namespace InfoService.Controllers
 
 
         [HttpPost]
+        [Authorize]
         public async Task<ResponseMsg> UpdateInfo(Passenger passenger)
         {
             if (await Repository.Passenger.CheckPassengerExist(passenger.AccountId))

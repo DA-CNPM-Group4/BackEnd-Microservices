@@ -1,5 +1,6 @@
 ﻿using ChatService.DTOs;
 using Helper.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,6 +11,7 @@ namespace ChatService.Controllers
     public class ChatController : BaseController
     {
         [HttpPost]
+        [Authorize]
         public async Task<ResponseMsg> GetChats(GetChatsDTO getChatsDTO)
         {
             ChatResponseDTO chatResponseDTO = await Repository.Chat.GetChat(getChatsDTO.TripId);

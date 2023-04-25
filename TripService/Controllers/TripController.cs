@@ -30,7 +30,7 @@ namespace TripService.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Driver")]
         public async Task<ResponseMsg> AcceptRequest(AcceptTripDTO acceptTripDTO)
         {
             Guid UserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -45,7 +45,7 @@ namespace TripService.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Driver")]
         public async Task<ResponseMsg> FinishTrip([FromBody] object tripIdJson)
         {
             Guid UserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -237,7 +237,6 @@ namespace TripService.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<ResponseMsg> GetCurrentTripWithCaching([FromBody] object tripIdJson)
         {
             JObject objTemp = JObject.Parse(tripIdJson.ToString());
@@ -279,8 +278,6 @@ namespace TripService.Controllers
             }
         }
 
-
-
         [HttpGet]
         [Authorize]
         public async Task<ResponseMsg> GetCurrentTripForPassenger([FromBody]object passengerTrip)
@@ -300,7 +297,7 @@ namespace TripService.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Driver")]
         public async Task<ResponseMsg> PickedPassenger([FromBody] object tripIdJson)
         {
             Guid UserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -330,7 +327,7 @@ namespace TripService.Controllers
 
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "Driver")]
         public async Task<ResponseMsg> GetIncome([FromBody]object getIncome)
         {
             Guid UserId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -379,7 +376,6 @@ namespace TripService.Controllers
         }
 
         [HttpGet]
-
         public async Task<ResponseMsg> TestLoadBalancing()
         {
             // create a DockerClient instance

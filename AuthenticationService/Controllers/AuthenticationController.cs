@@ -83,6 +83,7 @@ namespace AuthenticationService.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<ResponseMsg> ClearEmailSender()
         {
             int res = await Repository.Authentication.ClearEmailSender();
@@ -139,6 +140,7 @@ namespace AuthenticationService.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ResponseMsg> ResetPassword(object resetPassObj)
         {
             JObject objTemp = JObject.Parse(resetPassObj.ToString());
@@ -291,6 +293,7 @@ namespace AuthenticationService.Controllers
                     new Claim(ClaimTypes.Name, usr.Name),
                     new Claim(ClaimTypes.Email, usr.Email),
                     new Claim(ClaimTypes.NameIdentifier, usr.AccountId.ToString()),
+                    new Claim(ClaimTypes.Role, usr.Role),
                });
             Token token = new Token
             {
@@ -511,6 +514,7 @@ namespace AuthenticationService.Controllers
             }
         }
 
+        [HttpPost]
         public async Task<ResponseMsg> LoginWithGoogle(object loginToken)
         {
             JObject objTemp = JObject.Parse(loginToken.ToString());
@@ -635,7 +639,7 @@ namespace AuthenticationService.Controllers
         //    }
         //}
 
-        [HttpGet]
+        [HttpGet, Authorize]
         public async Task<ResponseMsg> ClearDb()
         {
             await Repository.Authentication.ClearTable();

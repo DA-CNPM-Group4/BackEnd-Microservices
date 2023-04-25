@@ -1,5 +1,5 @@
 ﻿using Helper.Models;
-using HotChocolate.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
@@ -38,8 +38,6 @@ namespace TripService.Controllers
                 message = result > 0 ? "Send request successfully":"Failed to send request",
             };
         }
-
-        
 
         [HttpGet]
         public async Task<ResponseMsg> CalculatePrice(double distance)

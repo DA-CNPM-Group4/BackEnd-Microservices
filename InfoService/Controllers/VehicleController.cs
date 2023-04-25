@@ -1,5 +1,6 @@
 ﻿using Helper.Models;
 using InfoService.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
@@ -22,6 +23,7 @@ namespace InfoService.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Staff")]
         public async Task<ResponseMsg> GetVehiclesWithPagination(int pageSize, int pageNum)
         {
             int totalPage = await Repository.Vehicle.CalcNumOfPages(pageSize);
@@ -43,6 +45,7 @@ namespace InfoService.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ResponseMsg> RegisterVehicle(Vehicle vehicle)
         {
             if(await Repository.Vehicle.CheckDriverHasVehicleAlready(vehicle.DriverId) == true)
@@ -77,6 +80,7 @@ namespace InfoService.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ResponseMsg> GetDriverVehicle(object accountId)
         {
             JObject objTemp = JObject.Parse(accountId.ToString());

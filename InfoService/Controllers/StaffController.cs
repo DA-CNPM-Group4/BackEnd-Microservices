@@ -1,5 +1,6 @@
 ﻿using Helper.Models;
 using InfoService.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
@@ -11,6 +12,7 @@ namespace InfoService.Controllers
     public class StaffController : BaseController
     {
         [HttpGet]
+        [Authorize(Roles = "Staff")]
         public async Task<ResponseMsg> GetStaffs()
         {
             return new ResponseMsg
@@ -33,6 +35,7 @@ namespace InfoService.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Staff")]
         public async Task<ResponseMsg> GetStaffsWithPagination(int pageSize, int pageNum)
         {
             if (pageNum == 0)
@@ -87,6 +90,7 @@ namespace InfoService.Controllers
 
 
         [HttpPost]
+        [Authorize]
         public async Task<ResponseMsg> GetStaffInfoById(object accountObj)
         {
             JObject objTemp = JObject.Parse(accountObj.ToString());
@@ -114,6 +118,7 @@ namespace InfoService.Controllers
 
 
         [HttpPost]
+        [Authorize]
         public async Task<ResponseMsg> UpdateInfo(Staff staff)
         {
             if (await Repository.Staff.CheckStaffExist(staff.AccountId))
@@ -147,6 +152,7 @@ namespace InfoService.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<ResponseMsg> ClearDb()
         {
             await Repository.Driver.ClearTable();
