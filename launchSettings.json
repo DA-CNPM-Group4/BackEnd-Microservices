@@ -8,7 +8,9 @@
         "apigateway": "StartDebugging",
         "authenticationservice": "StartDebugging",
         "tripservice": "StartDebugging",
-        "chatservice": "StartDebugging"
+        "chatservice": "StartDebugging",
+        "tripservice2": "StartDebugging",
+        "tripservice3": "StartDebugging"
       }
     }
   }

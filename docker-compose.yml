@@ -134,15 +134,3 @@ services:
     #    - DB_NAME=dms_chat
     #    - DB_SA_PASSWORD=vuhiep2k1072001
 
-
-  infoservergrpc:
-    container_name: infoserver-grpc
-    image: ${DOCKER_REGISTRY-}infoservergrpc
-    build:
-      context: .
-      dockerfile: InfoServerGRPC/Dockerfile
-    ports:
-        - 8003:80
-    networks:
-        - backend
-
