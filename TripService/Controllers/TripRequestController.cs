@@ -48,7 +48,7 @@ namespace TripService.Controllers
             return new ResponseMsg
             {
                 status = true,
-                data = Repository.TripRequest.CalcPrice(distance),
+                data = _dataAccess.CalcPrice(distance),
                 message = "Price base on distance and vehicle type",
             };
         }

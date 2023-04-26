@@ -1,17 +1,12 @@
-using AuthenticationService.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Newtonsoft.Json.Linq;
 using System.Security.Claims;
-using System.Security.Principal;
 using TripService.Controllers;
 using TripService.DataAccess.Interface;
 using TripService.DTOs;
 using TripService.Models;
-using Xunit;
-
-
 
 namespace ControllerTest
 {

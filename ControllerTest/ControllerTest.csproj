@@ -24,8 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Backend-Microservices\AuthenticationService\AuthenticationService.csproj" />
-    <ProjectReference Include="..\Backend-Microservices\TripService\TripService.csproj" />
+    <ProjectReference Include="..\AuthenticationService\AuthenticationService.csproj" />
+    <ProjectReference Include="..\TripService\TripService.csproj" />
   </ItemGroup>
 
 </Project>
