@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using System.Security.Claims;
 using TripService.DataAccess;
+using TripService.DataAccess.Interface;
 using TripService.Models;
 using TripService.Repositories;
 
@@ -14,11 +15,11 @@ namespace TripService.Controllers
     [ApiController]
     public class TripRequestController : BaseController
     {
-        private readonly TripRequestDataAccess _dataAccess;
+        private readonly ITripRequestDataAccess _dataAccess;
 
-        public TripRequestController()
+        public TripRequestController(ITripRequestDataAccess requestDataAccess) 
         {
-            _dataAccess = new TripRequestDataAccess();
+            _dataAccess = requestDataAccess;
         }
 
         [Authorize]

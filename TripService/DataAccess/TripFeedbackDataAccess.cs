@@ -1,11 +1,12 @@
 ﻿using Helper;
 using System.Security.Cryptography;
 using System.Text;
+using TripService.DataAccess.Interface;
 using TripService.Models;
 
 namespace TripService.DataAccess
 {
-    public class TripFeedbackDataAccess
+    public class TripFeedbackDataAccess: ITripFeedbackDataAccess
     {
         private readonly List<string> _connectionStrings = new List<string>();
         public TripFeedbackDataAccess() 

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using System.Security.Claims;
 using TripService.DataAccess;
+using TripService.DataAccess.Interface;
 using TripService.DTOs;
 using TripService.Models;
 
@@ -14,11 +15,11 @@ namespace TripService.Controllers
     [ApiController]
     public class TripFeedbackController : BaseController
     {
-        private readonly TripFeedbackDataAccess _dataAccess;
+        private readonly ITripFeedbackDataAccess _dataAccess;
 
-        public TripFeedbackController()
+        public TripFeedbackController(ITripFeedbackDataAccess tripFeedbackDataAccess)
         {
-            _dataAccess = new TripFeedbackDataAccess();
+            _dataAccess = tripFeedbackDataAccess;
         }
 
         [HttpPost]

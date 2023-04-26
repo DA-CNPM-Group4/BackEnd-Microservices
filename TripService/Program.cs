@@ -2,11 +2,14 @@
 using JwtTokenManager;
 using TripService;
 using TripService.DataAccess;
+using TripService.DataAccess.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-    
+builder.Services.AddTransient<ITripDataAccess,  TripDataAccess>();
+builder.Services.AddTransient<ITripRequestDataAccess, TripRequestDataAccess>();
+builder.Services.AddTransient<ITripFeedbackDataAccess, TripFeedbackDataAccess>();  
 builder.Services.AddGraphQLServer().AddQueryType<Query>();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();

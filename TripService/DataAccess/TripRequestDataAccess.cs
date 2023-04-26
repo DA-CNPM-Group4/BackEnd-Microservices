@@ -1,12 +1,13 @@
 ﻿using Helper;
 using System.Security.Cryptography;
 using System.Text;
+using TripService.DataAccess.Interface;
 using TripService.FireBaseServices;
 using TripService.Models;
 
 namespace TripService.DataAccess
 {
-    public class TripRequestDataAccess
+    public class TripRequestDataAccess : ITripRequestDataAccess
     {
         private readonly FirebaseService _fireBaseService;
         private readonly List<string> _connectionStrings = new List<string>();
@@ -18,10 +19,7 @@ namespace TripService.DataAccess
             _connectionStrings.Add(connectionStrings.GetConnectionString("connectionString1"));
             _connectionStrings.Add(connectionStrings.GetConnectionString("connectionString2"));
             _connectionStrings.Add(connectionStrings.GetConnectionString("connectionString3"));
-            //foreach (var connectionString in connectionStrings.GetChildren())
-            //{
-
-            //}
+            
         }
 
         private string GetConnectionString(string userId)

@@ -37,6 +37,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InfoServiceGRPC", "InfoServ
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InfoServerGRPC", "InfoServerGRPC\InfoServerGRPC.csproj", "{7AA21DC6-5893-4791-A221-F3233ED08035}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControllerTest", "..\ControllerTest\ControllerTest.csproj", "{D559BEEB-1DDF-44EB-926F-A666C573B203}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,10 @@ Global
 		{7AA21DC6-5893-4791-A221-F3233ED08035}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7AA21DC6-5893-4791-A221-F3233ED08035}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7AA21DC6-5893-4791-A221-F3233ED08035}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D559BEEB-1DDF-44EB-926F-A666C573B203}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D559BEEB-1DDF-44EB-926F-A666C573B203}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D559BEEB-1DDF-44EB-926F-A666C573B203}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D559BEEB-1DDF-44EB-926F-A666C573B203}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -12,6 +12,7 @@ using Helper;
 using Newtonsoft.Json;
 using TripService.DataAccess;
 using System.Security.Claims;
+using TripService.DataAccess.Interface;
 
 namespace TripService.Controllers
 {
@@ -19,14 +20,16 @@ namespace TripService.Controllers
     [ApiController]
     public class TripController : BaseController
     {
-        private readonly TripDataAccess _dataAccess;
-        private readonly TripRequestDataAccess _requestDataAccess;
-        private readonly TripFeedbackDataAccess _feedbackDataAccess;
-        public TripController()
+        private readonly ITripDataAccess _dataAccess;
+        private readonly ITripRequestDataAccess _requestDataAccess;
+        private readonly ITripFeedbackDataAccess _feedbackDataAccess;
+
+
+        public TripController(ITripDataAccess tripDataAccess, ITripRequestDataAccess tripRequestDataAccess, ITripFeedbackDataAccess tripFeedbackDataAccess)
         {
-            _dataAccess = new TripDataAccess(); 
-            _requestDataAccess = new TripRequestDataAccess();
-            _feedbackDataAccess = new TripFeedbackDataAccess();
+            _dataAccess = tripDataAccess;
+            _requestDataAccess = tripRequestDataAccess;
+            _feedbackDataAccess = tripFeedbackDataAccess;
         }
 
         [HttpPost]
@@ -77,7 +80,7 @@ namespace TripService.Controllers
             };
             
         }
-
+         
         [HttpGet]
         [Authorize]
         public async Task<ResponseMsg> GetPassengersTripTotalPages([FromBody] object tripJson)

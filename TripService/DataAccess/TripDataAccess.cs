@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
+using TripService.DataAccess.Interface;
 using TripService.FireBaseServices;
 using TripService.Models;
 using TripService.RabbitMQServices;
@@ -10,7 +11,7 @@ using static Helper.Catalouge;
 
 namespace TripService.DataAccess
 {
-    public class TripDataAccess
+    public class TripDataAccess: ITripDataAccess
     {
         private readonly List<string> _connectionStrings = new List<string>();
         private readonly FirebaseService _fireBaseServices;
@@ -61,6 +62,10 @@ namespace TripService.DataAccess
                     currentConnectionString = connectionString;
                     break;
                 }
+            }
+            if(currentConnectionString == "")
+            {
+                return Guid.Empty;
             }
             using var dbContext = new TripServiceContext(currentConnectionString);
             TripRequest tripRequest = await dbContext.TripRequest.FindAsync(Guid.Parse(requestId));
